@@ -1,0 +1,181 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Encabezado */
+header {
+  background-color: #535353;
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+}
+
+.logo-sitio {
+  font-weight: bold;
+  font-size: 1.5rem;
+  user-select: none;
+}
+
+/* Menu de navegacion y enlaces */
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+  color: #a0c4ff;
+}
+
+.carro-compras {
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Contenido principal */
+main {
+  flex: 1;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+/* Logo empresa */
+.seccion-logo {
+  text-align: center;
+}
+
+.logo-empresa {
+  width: 180px;
+  height: 180px;
+  background-color: #ddd;
+  border: 2px solid #bbb;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #999;
+  font-size: 1rem;
+  user-select: none;
+  margin: 0 auto 15px;
+}
+
+.nombre-empresa {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #535353;
+  user-select: none;
+}
+
+/* Formulario de contacto */
+.formulario-contacto {
+  background-color: white;
+  border: 2px solid #535353;
+  border-radius: 12px;
+  padding: 30px 40px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 4px 12px #0000001a;
+}
+
+.formulario-contacto h2 {
+  margin-bottom: 25px;
+  color: #535353;
+  font-weight: 700;
+  text-align: center;
+  user-select: none;
+}
+
+form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #535353;
+}
+
+form input[type="text"],
+form input[type="email"],
+form textarea {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border: 1.5px solid #bbb;
+  border-radius: 8px;
+  font-size: 1rem;
+  resize: vertical;
+  transition: border-color 0.3s ease;
+}
+
+form input[type="text"]:focus,
+form input[type="email"]:focus,
+form textarea:focus {
+  border-color: #004080;
+  outline: none;
+  background-color: #f0f8ff;
+}
+
+form textarea {
+  min-height: 100px;
+}
+
+form button {
+  width: 100%;
+  padding: 14px;
+  background-color: #535353;
+  color: white;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+form button:hover {
+  background-color: #002952;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  header {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px 20px;
+  }
+
+  nav ul {
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .formulario-contacto {
+    padding: 25px 20px;
+  }
+}

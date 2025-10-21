@@ -1,0 +1,119 @@
+/* ==== ESTILO GENERAL ==== */
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  margin: 0;
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ==== CONTENEDOR PRINCIPAL ==== */
+.admin-container {
+  display: flex;
+  width: 100%;
+}
+
+/* ==== SIDEBAR ==== */
+.sidebar {
+  width: 230px;
+  background-color: #111;
+  color: #fff;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-right: 1px solid #222;
+}
+
+.sidebar h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  text-align: center;
+  border-bottom: 2px solid #333;
+  padding-bottom: 10px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  margin-bottom: 12px;
+}
+
+.sidebar a {
+  color: #aaa;
+  text-decoration: none;
+  display: block;
+  padding: 10px;
+  border-radius: 6px;
+  transition: 0.3s;
+  font-weight: 500;
+}
+
+.sidebar a:hover {
+  background-color: #222;
+  color: #fff;
+}
+
+.sidebar a.active {
+  background-color: #fff;
+  color: #000;
+  font-weight: bold;
+}
+
+/* ==== CONTENIDO PRINCIPAL ==== */
+.admin-main {
+  flex: 1;
+  padding: 40px;
+  background-color: #000;
+}
+
+.admin-main h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #333;
+  padding-bottom: 10px;
+}
+
+.admin-main p {
+  font-size: 1.1rem;
+  color: #ccc;
+  line-height: 1.6;
+}
+
+/* ==== RESPONSIVE ==== */
+@media (max-width: 768px) {
+  .admin-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+    border-right: none;
+    border-bottom: 1px solid #222;
+  }
+
+  .sidebar h2 {
+    display: none;
+  }
+
+  .sidebar ul {
+    display: flex;
+    gap: 10px;
+  }
+
+  .sidebar a {
+    padding: 8px 12px;
+  }
+
+  .admin-main {
+    padding: 20px;
+    text-align: center;
+  }
+}

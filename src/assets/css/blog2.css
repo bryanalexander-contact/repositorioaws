@@ -1,0 +1,120 @@
+/* --- ESTILO GENERAL --- */
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    line-height: 1.7;
+    color: #333;
+    background: #fafafa;
+    margin: 0;
+    padding: 0;
+}
+
+/* --- HEADER --- */
+header {
+    background: #222;
+    color: #fff;
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 12px;
+    font-size: 0.95rem;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* --- MAIN BLOG --- */
+main {
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+main h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* --- ARTÍCULOS --- */
+.blog-entry {
+    background: #fff;
+    padding: 25px;
+    margin-bottom: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    border: 1px solid #eee;
+}
+
+.blog-entry h2 {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+.blog-entry h2 a {
+    color: #222;
+    text-decoration: none;
+}
+
+.blog-entry h2 a:hover {
+    color: #0077cc;
+}
+
+.blog-entry p {
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+.blog-entry img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 20px 0;
+    display: block;
+}
+
+/* --- FOOTER --- */
+footer {
+    text-align: center;
+    padding: 20px;
+    background: #222;
+    color: #eee;
+    font-size: 0.9rem;
+    margin-top: 50px;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    main {
+        padding: 0 15px;
+    }
+    header {
+        flex-direction: column;
+        text-align: center;
+    }
+    nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}

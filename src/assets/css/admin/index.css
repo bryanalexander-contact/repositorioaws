@@ -1,0 +1,112 @@
+/* ==== ESTILO GENERAL ==== */
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background-color: #000;
+  color: #fff;
+  margin: 0;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ==== SIDEBAR ==== */
+.sidebar {
+  background-color: #111;
+  padding: 30px;
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 25px;
+  border-right: 1px solid #222;
+}
+
+.sidebar h2 {
+  color: #fff;
+  font-size: 1.5rem;
+  margin: 0;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #333;
+  padding-bottom: 10px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  margin-bottom: 12px;
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: #aaa;
+  display: block;
+  padding: 10px;
+  border-radius: 6px;
+  transition: 0.3s;
+  font-weight: 500;
+}
+
+.sidebar a:hover {
+  background-color: #222;
+  color: #fff;
+}
+
+.sidebar a.active {
+  background-color: #fff;
+  color: #000;
+  font-weight: bold;
+}
+
+/* ==== CONTENIDO PRINCIPAL ==== */
+.admin-main {
+  flex: 1;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: #000;
+}
+
+.admin-main h1 {
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #333;
+  padding-bottom: 10px;
+}
+
+.admin-main p {
+  color: #ccc;
+  font-size: 1.1rem;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+/* ==== RESPONSIVE ==== */
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+    border-right: none;
+    border-bottom: 1px solid #222;
+  }
+
+  .sidebar h2 {
+    display: none;
+  }
+
+  .admin-main {
+    padding: 30px 20px;
+    align-items: center;
+    text-align: center;
+  }
+}

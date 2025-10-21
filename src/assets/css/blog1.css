@@ -1,0 +1,141 @@
+
+/*=======================
+  DETALLE BLOG 1 y 2
+  =======================*/
+
+/* ESTILOS GENERALES */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #F9FAFB;
+    color: #374151;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* HEADER*/
+.header {
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+.logo-titulo {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 40px;
+    width: 40px;
+    margin-right: 0.75rem;
+}
+
+.nav a {
+    margin-left: 1.5rem;
+    text-decoration: none;
+    color: #4B5563;
+    transition: color 0.3s;
+}
+
+.nav a:hover {
+    color: #2563EB;
+}
+
+.carrito .cart-icon {
+    position: relative;
+}
+
+.carrito .cart-icon img {
+    width: 30px;
+    height: 30px;
+}
+
+.carrito .cart-icon span {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #EF4444;
+    color: white;
+    font-size: 0.75rem;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* MAIN*/
+.main {
+    padding: 2rem 0;
+    text-align: center;
+}
+
+.main h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+}
+
+/* Contenido imagen + texto */
+.contenido {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.contenido .col img {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.texto p {
+    margin-bottom: 1rem;
+}
+
+/* FOOTER*/
+.footer {
+    background-color: #1F2937;
+    color: #ffffff;
+    padding: 1.5rem 0;
+    text-align: center;
+}
+
+/* RESPONSIVE */
+@media(min-width: 768px) {
+    .nav {
+        display: flex;
+    }
+
+    .contenido {
+        flex-direction: row;
+    }
+
+    .contenido .col {
+        width: 50%;
+    }
+
+    .texto {
+        text-align: left;
+    }
+}
+
+@media(max-width: 767px) {
+    .nav {
+        display: none;
+    }
+}
+  
