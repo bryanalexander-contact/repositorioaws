@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Nosotros from './pages/Nosotros';
@@ -26,8 +27,22 @@ function App() {
         {/* <Route path="/contacto" element={<Contacto />} /> */}
       </Routes>
     </Router>
+=======
+import React from "react";
+import { CartProvider } from "./context/CartContext";
+import Carrito from "./pages/Carrito";
+
+function App() {
+  return (
+    <CartProvider>
+      <Carrito />
+    </CartProvider>
+>>>>>>> 6f8d0a0 (inicializacion del proyecto)
   );
 }
 
 export default App;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6f8d0a0 (inicializacion del proyecto)
