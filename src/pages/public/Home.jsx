@@ -1,8 +1,8 @@
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import heroImg from '../assets/img/tienda-online.jpeg';
-import '../assets/css/index.css';
-import '../assets/css/modelo.css';
+import Header from '../../components/organisms/Header';
+import Footer from '../../components/organisms/Footer';
+import heroImg from '../../assets/img/tienda-online.jpeg';
+import '../../assets/css/index.css';
+import '../../assets/css/modelo.css';
 
 function Home() {
   return (
