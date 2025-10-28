@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 import Home from "./pages/public/Home";
 import Productos from "./pages/public/Productos";
 import DetalleProducto from "./pages/public/DetalleProducto";
@@ -8,6 +9,8 @@ import Nosotros from "./pages/public/Nosotros";
 import Contacto from "./pages/public/Contacto";
 import Carrito from "./pages/public/Carrito";
 import Blogs from "./pages/public/Blogs";
+
+import PanelAdmin from "./pages/admin/PanelAdmin"; // ✅ Import default correcto
 
 import { CartProvider } from "./context/CartContext";
 import { ProductsProvider } from "./context/ProductsContext";
@@ -29,6 +32,8 @@ export default function App() {
               <Route path="/contacto" element={<Contacto />} />
               <Route path="/carrito" element={<Carrito />} />
               <Route path="/blogs" element={<Blogs />} />
+              {/* Ruta Admin */}
+              <Route path="/admin" element={<PanelAdmin />} />
             </Routes>
           </CartProvider>
         </ProductsProvider>

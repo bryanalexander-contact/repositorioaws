@@ -16,7 +16,8 @@ export default function Header() {
           <li><Link to="/blogs">Blog</Link></li> |
           <li><Link to="/contacto">Contacto</Link></li> |
           <li><Link to="/login">Iniciar Sesión</Link></li> |
-          <li><Link to="/registro">Registro</Link></li>
+          <li><Link to="/registro">Registro</Link></li> |
+          <li><Link to="/admin">Panel Admin</Link></li> {/* ✅ Nuevo link */}
         </ul>
       </nav>
       <div className="carrito">
