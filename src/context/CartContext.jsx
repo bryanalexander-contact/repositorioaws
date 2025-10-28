@@ -6,7 +6,8 @@ export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [carrito, setCarrito] = useState([]);
-  const { user } = useContext(UsersContext);
+  const usersContext = useContext(UsersContext);
+  const user = usersContext?.user || null; // ✅ seguro, incluso si UsersContext no cargó
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("carrito")) || [];
@@ -23,9 +24,7 @@ export const CartProvider = ({ children }) => {
     let nuevo;
     if (existente) {
       nuevo = carrito.map((i) =>
-        i.id === producto.id
-          ? { ...i, cantidad: i.cantidad + cantidad }
-          : i
+        i.id === producto.id ? { ...i, cantidad: i.cantidad + cantidad } : i
       );
     } else {
       nuevo = [...carrito, { ...producto, cantidad }];
@@ -34,32 +33,26 @@ export const CartProvider = ({ children }) => {
   };
 
   const removeFromCart = (id) => {
-    const nuevo = carrito.filter((i) => i.id !== id);
-    guardarCarrito(nuevo);
+    guardarCarrito(carrito.filter((i) => i.id !== id));
   };
 
   const updateQuantity = (id, cantidad) => {
-    const nuevo = carrito.map((i) =>
-      i.id === id ? { ...i, cantidad } : i
+    guardarCarrito(
+      carrito.map((i) => (i.id === id ? { ...i, cantidad } : i))
     );
-    guardarCarrito(nuevo);
   };
 
   const clearCart = () => guardarCarrito([]);
 
   const total = carrito.reduce(
-    (sum, i) =>
-      sum + (i.enOferta ? i.precioOferta : i.precio) * i.cantidad,
+    (sum, i) => sum + (i.enOferta ? i.precioOferta : i.precio) * i.cantidad,
     0
   );
 
-  // 🧾 Checkout
   const checkout = (datosForm) => {
     const camposRequeridos = ["nombre", "email", "direccion"];
     const incompleto = camposRequeridos.some((f) => !datosForm[f]?.trim());
-    if (incompleto) {
-      return { ok: false, redirect: "/compra-fallida" };
-    }
+    if (incompleto) return { ok: false, redirect: "/compra-fallida" };
 
     clearCart();
     return { ok: true, redirect: "/compra-exitosa" };
@@ -67,9 +60,9 @@ export const CartProvider = ({ children }) => {
 
   const datosCheckout = user
     ? {
-        nombre: user.nombre,
-        email: user.correo,
-        direccion: user.direccion,
+        nombre: user.nombre || "",
+        email: user.correo || "",
+        direccion: user.direccion || "",
       }
     : { nombre: "", email: "", direccion: "" };
 
@@ -90,3 +83,6 @@ export const CartProvider = ({ children }) => {
     </CartContext.Provider>
   );
 };
+
+// Hook para usar más fácil
+export const useCart = () => useContext(CartContext);

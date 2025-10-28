@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useProducts } from "../context/ProductsContext";
-import { useCart } from "../context/CartContext";
+import { useProducts } from "../../context/ProductsContext";
+import { useCart } from "../../context/CartContext";
+
 
 export default function DetalleProducto() {
   const { productos } = useProducts();

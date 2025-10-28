@@ -1,12 +1,14 @@
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import equipoImg from '../assets/img/equipo-colaborando.webp';
-import tecnologiaImg from '../assets/img/tecnologia.jpg';
-import profesionalesImg from '../assets/img/profesionales.jpg';
+import React from "react";
+import Header from "../../components/organisms/Header";
+import Footer from "../../components/organisms/Footer";
+
+import equipoImg from "../../assets/img/equipo-colaborando.webp";
+import tecnologiaImg from "../../assets/img/tecnologia.jpg";
+import profesionalesImg from "../../assets/img/profesionales.jpg";
 
 // Importar CSS global
-import '../assets/css/nosotros.css';
-import '../assets/css/modelo.css';
+import "../../assets/css/nosotros.css";
+import "../../assets/css/modelo.css";
 
 function Nosotros() {
   return (

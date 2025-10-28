@@ -1,55 +1,46 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import "../assets/css/registro.css";
-import "../assets/css/modelo.css";
-import cartImg from "../assets/img/cart.jpg";
+import Header from "../../components/organisms/Header";
+import Footer from "../../components/organisms/Footer";
 
-const Registro = () => {
-  const [form, setForm] = useState({
-    nombre: "",
-    correo: "",
-    password: "",
-    confirmar: "",
-    telefono: "",
-    region: "",
-    comuna: "",
-  });
+// CSS
+import "../../assets/css/registro.css";
+import "../../assets/css/modelo.css";
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+export default function Registro() {
+  const [nombre, setNombre] = useState("");
+  const [correo, setCorreo] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmar, setConfirmar] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [region, setRegion] = useState("");
+  const [comuna, setComuna] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(form);
-    // Aquí puedes agregar lógica para enviar los datos al backend
+
+    if (password !== confirmar) {
+      alert("Las contraseñas no coinciden");
+      return;
+    }
+
+    // Aquí iría la lógica de registro (guardar en contexto o API)
+    console.log("Registrando usuario:", {
+      nombre,
+      correo,
+      password,
+      telefono,
+      region,
+      comuna,
+    });
+
+    alert("¡Registro simulado! Reemplaza con tu lógica real.");
   };
 
   return (
-    <div>
-      {/* HEADER */}
-      <header>
-        <div className="logo">
-          <h1>TiendaOnline</h1>
-        </div>
-        <nav>
-          <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/productos">Productos</Link></li>
-            <li><Link to="/nosotros">Nosotros</Link></li>
-            <li><Link to="/blogs">Blog</Link></li>
-            <li><Link to="/contacto">Contacto</Link></li>
-            <li><Link to="/login">Iniciar Sesión</Link></li>
-            <li><Link to="/registro">Registro</Link></li>
-          </ul>
-        </nav>
-        <div className="carrito">
-          <img src={cartImg} alt="Carrito de compras" />
-        </div>
-      </header>
+    <>
+      <Header />
 
-      {/* FORMULARIO */}
-      <section className="registro">
+      <main className="registro">
         <div className="form-container">
           <h2>Registro de Usuario</h2>
           <form onSubmit={handleSubmit}>
@@ -59,8 +50,8 @@ const Registro = () => {
               id="nombre"
               name="nombre"
               required
-              value={form.nombre}
-              onChange={handleChange}
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
             />
 
             <label htmlFor="correo">Correo</label>
@@ -69,8 +60,8 @@ const Registro = () => {
               id="correo"
               name="correo"
               required
-              value={form.correo}
-              onChange={handleChange}
+              value={correo}
+              onChange={(e) => setCorreo(e.target.value)}
             />
 
             <label htmlFor="password">Contraseña</label>
@@ -79,8 +70,8 @@ const Registro = () => {
               id="password"
               name="password"
               required
-              value={form.password}
-              onChange={handleChange}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
 
             <label htmlFor="confirmar">Confirmar Contraseña</label>
@@ -89,8 +80,8 @@ const Registro = () => {
               id="confirmar"
               name="confirmar"
               required
-              value={form.confirmar}
-              onChange={handleChange}
+              value={confirmar}
+              onChange={(e) => setConfirmar(e.target.value)}
             />
 
             <label htmlFor="telefono">Teléfono (opcional)</label>
@@ -98,10 +89,11 @@ const Registro = () => {
               type="tel"
               id="telefono"
               name="telefono"
-              value={form.telefono}
-              onChange={handleChange}
+              value={telefono}
+              onChange={(e) => setTelefono(e.target.value)}
             />
 
+            {/* Selección de Región y Comuna */}
             <div className="selects">
               <div className="select-box">
                 <label htmlFor="region">Región</label>
@@ -109,8 +101,8 @@ const Registro = () => {
                   id="region"
                   name="region"
                   required
-                  value={form.region}
-                  onChange={handleChange}
+                  value={region}
+                  onChange={(e) => setRegion(e.target.value)}
                 >
                   <option value="">--Seleccione la Región--</option>
                   <option value="arica">Arica y Parinacota</option>
@@ -138,8 +130,8 @@ const Registro = () => {
                   id="comuna"
                   name="comuna"
                   required
-                  value={form.comuna}
-                  onChange={handleChange}
+                  value={comuna}
+                  onChange={(e) => setComuna(e.target.value)}
                 >
                   <option value="">--Seleccione la Comuna--</option>
                   <option value="santiago">Santiago</option>
@@ -162,9 +154,9 @@ const Registro = () => {
             </div>
           </form>
         </div>
-      </section>
-    </div>
-  );
-};
+      </main>
 
-export default Registro;
+      <Footer />
+    </>
+  );
+}

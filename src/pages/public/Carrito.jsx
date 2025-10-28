@@ -1,6 +1,6 @@
 import React from "react";
-import { useCart } from "../context/CartContext";
-import CartItem from "../components/molecules/CartItem";
+import { useCart } from "../../context/CartContext";
+import CartItem from "../../components/molecules/CartItem";
 
 const Carrito = () => {
   const { cart, removeFromCart, updateQuantity, total } = useCart();
@@ -9,7 +9,7 @@ const Carrito = () => {
 
   return (
     <div className="carrito-contenedor">
-      {cart.map(item => (
+      {cart.map((item) => (
         <CartItem
           key={item.id}
           item={item}

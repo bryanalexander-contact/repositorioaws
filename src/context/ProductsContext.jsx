@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 
 export const ProductsContext = createContext();
 
@@ -94,3 +94,6 @@ export const ProductsProvider = ({ children }) => {
     </ProductsContext.Provider>
   );
 };
+
+// ✅ Agregamos este hook para facilitar el uso del contexto
+export const useProducts = () => useContext(ProductsContext);

@@ -1,5 +1,5 @@
 // src/context/UsersContext.jsx
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 
 export const UsersContext = createContext();
 
@@ -69,9 +69,13 @@ export const UsersProvider = ({ children }) => {
         logout,
         eliminarUsuario,
         actualizarUsuario,
+        validarCorreo,
       }}
     >
       {children}
     </UsersContext.Provider>
   );
 };
+
+// Hook para usar fácilmente
+export const useUsers = () => useContext(UsersContext);

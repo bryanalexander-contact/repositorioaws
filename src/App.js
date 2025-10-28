@@ -7,26 +7,30 @@ import Login from "./pages/public/Login";
 import Nosotros from "./pages/public/Nosotros";
 import Contacto from "./pages/public/Contacto";
 import Carrito from "./pages/public/Carrito";
+
 import { CartProvider } from "./context/CartContext";
 import { ProductsProvider } from "./context/ProductsContext";
+import { UsersProvider } from "./context/UsersContext";
 
 export default function App() {
   return (
     <Router>
-      <ProductsProvider>
-        <CartProvider>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/productos" element={<Productos />} />
-            <Route path="/producto/:id" element={<DetalleProducto />} />
-            <Route path="/registro" element={<Registro />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/nosotros" element={<Nosotros />} />
-            <Route path="/contacto" element={<Contacto />} />
-            <Route path="/carrito" element={<Carrito />} />
-          </Routes>
-        </CartProvider>
-      </ProductsProvider>
+      <UsersProvider>
+        <ProductsProvider>
+          <CartProvider>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/productos" element={<Productos />} />
+              <Route path="/producto/:id" element={<DetalleProducto />} />
+              <Route path="/registro" element={<Registro />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/nosotros" element={<Nosotros />} />
+              <Route path="/contacto" element={<Contacto />} />
+              <Route path="/carrito" element={<Carrito />} />
+            </Routes>
+          </CartProvider>
+        </ProductsProvider>
+      </UsersProvider>
     </Router>
   );
 }
