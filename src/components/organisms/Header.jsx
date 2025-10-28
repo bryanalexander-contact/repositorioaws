@@ -1,41 +1,29 @@
-import React from 'react';
-import '../../assets/css/index.css';
-import '../../assets/css/modelo.css';
-import cartImg from '../../assets/img/cart.jpg'; // 👈 asegúrate de que esta imagen exista
+import { Link } from "react-router-dom";
+import cart from "../../assets/img/cart.jpg";
+import "../../assets/css/modelo.css";
 
-function Header() {
+export default function Header() {
   return (
-    <header className="header">
+    <header>
       <div className="logo">
         <h1>TiendaOnline</h1>
       </div>
-
       <nav>
-        <ul className="nav-links">
-          <li><a href="/">Home</a></li>
-          <li><span>|</span></li>
-          <li><a href="/productos">Productos</a></li>
-          <li><span>|</span></li>
-          <li><a href="/nosotros">Nosotros</a></li>
-          <li><span>|</span></li>
-          <li><a href="/blogs">Blog</a></li>
-          <li><span>|</span></li>
-          <li><a href="/contacto">Contacto</a></li>
-          <li><span>|</span></li>
-          <li><a href="/login">Iniciar Sesión</a></li>
-          <li><span>|</span></li>
-          <li><a href="/registro">Registro</a></li>
+        <ul>
+          <li><Link to="/">Home</Link></li> |
+          <li><Link to="/productos">Productos</Link></li> |
+          <li><Link to="/nosotros">Nosotros</Link></li> |
+          <li><Link to="/blogs">Blog</Link></li> |
+          <li><Link to="/contacto">Contacto</Link></li> |
+          <li><Link to="/login">Iniciar Sesión</Link></li> |
+          <li><Link to="/registro">Registro</Link></li>
         </ul>
       </nav>
-
       <div className="carrito">
-        <a href="/carrito">
-          <img src={cartImg} alt="Carrito de compras" />
-        </a>
+        <Link to="/carrito">
+          <img src={cart} alt="Carrito de compras" />
+        </Link>
       </div>
     </header>
   );
 }
-
-export default Header;
-    
