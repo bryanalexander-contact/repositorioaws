@@ -3,13 +3,13 @@ import { useCart } from "../../context/CartContext";
 import CartItem from "../../components/molecules/CartItem";
 
 const Carrito = () => {
-  const { cart, removeFromCart, updateQuantity, total } = useCart();
+  const { carrito, removeFromCart, updateQuantity, total } = useCart(); // ✅ cambiar cart → carrito
 
-  if (cart.length === 0) return <p>Tu carrito está vacío 🛒</p>;
+  if (carrito.length === 0) return <p>Tu carrito está vacío 🛒</p>;
 
   return (
     <div className="carrito-contenedor">
-      {cart.map((item) => (
+      {carrito.map((item) => (
         <CartItem
           key={item.id}
           item={item}

@@ -8,8 +8,8 @@ function PanelAdmin() {
       <aside className="sidebar">
         <h2>Panel Admin</h2>
         <ul>
-          <li><Link to="/admin/productos">Productos</Link></li>
-          <li><Link to="/admin/usuarios">Usuarios</Link></li>
+          <li><Link to="/admin/PanelProductos">Productos</Link></li>
+          <li><Link to="/admin/PanelUsuarios">Usuarios</Link></li>
         </ul>
       </aside>
 

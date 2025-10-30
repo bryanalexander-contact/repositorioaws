@@ -36,8 +36,8 @@ function EditarProducto({ productoId }) {
       <aside className="sidebar">
         <h2>Panel Productos</h2>
         <ul>
-          <li><Link to="/admin/mostrar-productos">Mostrar Productos</Link></li>
-          <li><Link to="/admin/nuevo-producto">Nuevo Producto</Link></li>
+          <li><Link to="/admin/MostrarProductos">Mostrar Productos</Link></li>
+          <li><Link to="/admin/NuevoProducto">Nuevo Producto</Link></li>
         </ul>
       </aside>
 

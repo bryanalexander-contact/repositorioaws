@@ -1,37 +1,61 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom"; // ✅ necesario
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useUsers } from "../../context/UsersContext";
 import "../../assets/css/admin/editar-usuario.css";
 
-function EditarUsuario({ userId }) {
+function EditarUsuario() {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const { usuarios, actualizarUsuario } = useUsers();
-  const [form, setForm] = useState(null);
+
+  const usuario = usuarios.find((u) => u.id === Number(id));
+
+  const [form, setForm] = useState({
+    run: "",
+    nombre: "",
+    apellidos: "",
+    correo: "",
+    fechaNacimiento: "",
+    tipoUsuario: "cliente",
+    region: "",
+    comuna: "",
+    direccion: "",
+  });
 
   useEffect(() => {
-    const u = usuarios.find(u => u.id === userId);
-    if (u) setForm(u);
-  }, [usuarios, userId]);
+    if (usuario) setForm(usuario);
+  }, [usuario]);
 
-  if (!form) return <p>Cargando usuario...</p>;
-
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    actualizarUsuario(userId, form);
-    alert("Usuario actualizado!");
+    actualizarUsuario(Number(id), form);
+    alert("Usuario actualizado correctamente!");
+    navigate("/admin/MostrarUsuarios");
   };
+
+  if (!usuario) {
+    return (
+      <div className="admin-container">
+        <main className="admin-main">
+          <h2>Usuario no encontrado 😕</h2>
+          <Link to="/admin/MostrarUsuarios">Volver</Link>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="admin-container">
       <aside className="sidebar">
         <h2>Panel Usuarios</h2>
         <ul>
-          <li><Link to="/admin/mostrar-usuarios">Mostrar Usuarios</Link></li>
-          <li><Link to="/admin/nuevo-usuario">Nuevo Usuario</Link></li>
+          <li><Link to="/admin/MostrarUsuarios">Mostrar Usuarios</Link></li>
+          <li><Link to="/admin/NuevoUsuario">Nuevo Usuario</Link></li>
         </ul>
       </aside>
 
@@ -45,13 +69,21 @@ function EditarUsuario({ userId }) {
           <label>Apellidos</label>
           <input name="apellidos" value={form.apellidos} onChange={handleChange} required />
           <label>Correo</label>
-          <input name="correo" type="email" value={form.correo} onChange={handleChange} required />
+          <input type="email" name="correo" value={form.correo} onChange={handleChange} required />
+          <label>Fecha de Nacimiento</label>
+          <input type="date" name="fechaNacimiento" value={form.fechaNacimiento || ""} onChange={handleChange} />
           <label>Tipo Usuario</label>
           <select name="tipoUsuario" value={form.tipoUsuario} onChange={handleChange}>
             <option value="administrador">Administrador</option>
             <option value="cliente">Cliente</option>
             <option value="vendedor">Vendedor</option>
           </select>
+          <label>Región</label>
+          <input name="region" value={form.region} onChange={handleChange} />
+          <label>Comuna</label>
+          <input name="comuna" value={form.comuna} onChange={handleChange} />
+          <label>Dirección</label>
+          <input name="direccion" value={form.direccion} onChange={handleChange} required />
           <button type="submit">Guardar Cambios</button>
         </form>
       </main>

@@ -43,9 +43,9 @@ function NuevoUsuario() {
       <aside className="sidebar">
         <h2>Panel Usuarios</h2>
         <ul>
-          <li><Link to="/admin/mostrar-usuarios">Mostrar Usuarios</Link></li>
-          <li><Link to="/admin/nuevo-usuario" className="active">Nuevo Usuario</Link></li>
-          <li><Link to="/admin/editar-usuario">Editar Usuarios</Link></li>
+          <li><Link to="/admin/MostrarUsuarios">Mostrar Usuarios</Link></li>
+          <li><Link to="/admin/NuevoUsuario" className="active">Nuevo Usuario</Link></li>
+          <li><Link to="/admin/EditarUsuario">Editar Usuarios</Link></li>
         </ul>
       </aside>
 

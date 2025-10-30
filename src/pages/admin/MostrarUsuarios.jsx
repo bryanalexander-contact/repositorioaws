@@ -1,7 +1,8 @@
 import React from "react";
 import { useUsers } from "../../context/UsersContext";
 import "../../assets/css/admin/mostrar-usuarios.css";
-import { Link } from "react-router-dom"; // ✅ necesario
+import { Link } from "react-router-dom";
+
 function MostrarUsuarios() {
   const { usuarios, eliminarUsuario } = useUsers();
 
@@ -10,8 +11,8 @@ function MostrarUsuarios() {
       <aside className="sidebar">
         <h2>Panel Usuarios</h2>
         <ul>
-          <li><Link to="/admin/mostrar-usuarios" className="active">Mostrar Usuarios</Link></li>
-          <li><Link to="/admin/nuevo-usuario">Nuevo Usuario</Link></li>
+          <li><Link to="/admin/MostrarUsuarios" className="active">Mostrar Usuarios</Link></li>
+          <li><Link to="/admin/NuevoUsuario">Nuevo Usuario</Link></li>
         </ul>
       </aside>
 
@@ -30,7 +31,7 @@ function MostrarUsuarios() {
             </tr>
           </thead>
           <tbody>
-            {usuarios.map(u => (
+            {usuarios.map((u) => (
               <tr key={u.id}>
                 <td>{u.run}</td>
                 <td>{u.nombre} {u.apellidos}</td>
@@ -39,7 +40,9 @@ function MostrarUsuarios() {
                 <td>{u.region} / {u.comuna}</td>
                 <td>{u.direccion}</td>
                 <td>
-                  <button>Editar</button>
+                  <Link to={`/admin/EditarUsuario/${u.id}`}>
+                    <button>Editar</button>
+                  </Link>
                   <button onClick={() => eliminarUsuario(u.id)}>Eliminar</button>
                 </td>
               </tr>
