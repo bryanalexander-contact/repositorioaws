@@ -12,12 +12,14 @@ export default function Header() {
         <ul>
           <li><Link to="/">Home</Link></li> |
           <li><Link to="/productos">Productos</Link></li> |
+          <li><Link to="/categorias">Categorías</Link></li> |  {/* ✅ Nuevo link */}
+          <li><Link to="/ofertas">Ofertas</Link></li> |       {/* ✅ Nuevo link */}
           <li><Link to="/nosotros">Nosotros</Link></li> |
           <li><Link to="/blogs">Blog</Link></li> |
           <li><Link to="/contacto">Contacto</Link></li> |
           <li><Link to="/login">Iniciar Sesión</Link></li> |
           <li><Link to="/registro">Registro</Link></li> |
-          <li><Link to="/admin">Panel Admin</Link></li> {/* ✅ Nuevo link */}
+          <li><Link to="/admin">Panel Admin</Link></li>
         </ul>
       </nav>
       <div className="carrito">

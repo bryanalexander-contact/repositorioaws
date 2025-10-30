@@ -4,57 +4,66 @@ export const ProductsContext = createContext();
 
 export const ProductsProvider = ({ children }) => {
   const [productos, setProductos] = useState([]);
-  const [categorias] = useState([
-    "Accesorios Gamer",
-    "Accesorios de Ropa",
-    "Accesorios para el Hogar",
-    "Accesorios Electrónicos",
-  ]);
+  const [categorias] = useState(["Electrónica", "Ropa", "Hogar", "Gamer"]);
   const [productoEditando, setProductoEditando] = useState(null);
 
-  // Cargar productos desde localStorage al iniciar
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("productos")) || [];
     setProductos(stored);
   }, []);
 
-  // Guardar lista de productos en localStorage
   const guardarProductos = (lista) => {
     setProductos(lista);
     localStorage.setItem("productos", JSON.stringify(lista));
   };
 
-  // Generar ID autoincremental
   const generarId = () =>
     productos.length > 0 ? Math.max(...productos.map((p) => p.id)) + 1 : 1;
 
-  // Crear producto nuevo
   const agregarProducto = (producto) => {
+    const precio = Number(producto.precio) || 0;
+    const precioOferta =
+      producto.precioOferta !== undefined
+        ? Number(producto.precioOferta)
+        : null;
+
     const nuevo = {
       ...producto,
       id: generarId(),
-      enOferta: producto.enOferta || false,
-      precioOferta: producto.precioOferta || null,
+      precio,
+      precioOferta,
+      enOferta: precioOferta !== null && precioOferta < precio,
     };
-    const nuevos = [...productos, nuevo];
-    guardarProductos(nuevos);
+
+    guardarProductos([...productos, nuevo]);
   };
 
-  // Editar producto existente
   const actualizarProducto = (id, datos) => {
-    const nuevos = productos.map((p) =>
-      p.id === id ? { ...p, ...datos } : p
-    );
+    const nuevos = productos.map((p) => {
+      if (p.id === id) {
+        const precio = Number(datos.precio) || p.precio || 0;
+        const precioOferta =
+          datos.precioOferta !== undefined
+            ? Number(datos.precioOferta)
+            : p.precioOferta || null;
+
+        return {
+          ...p,
+          ...datos,
+          precio,
+          precioOferta,
+          enOferta: precioOferta !== null && precioOferta < precio,
+        };
+      }
+      return p;
+    });
     guardarProductos(nuevos);
   };
 
-  // Eliminar producto
   const eliminarProducto = (id) => {
-    const nuevos = productos.filter((p) => p.id !== id);
-    guardarProductos(nuevos);
+    guardarProductos(productos.filter((p) => p.id !== id));
   };
 
-  // Marcar o desmarcar un producto en oferta
   const toggleOferta = (id, precioOferta = null) => {
     const nuevos = productos.map((p) =>
       p.id === id
@@ -68,11 +77,9 @@ export const ProductsProvider = ({ children }) => {
     guardarProductos(nuevos);
   };
 
-  // Obtener productos por categoría
   const productosPorCategoria = (categoria) =>
     productos.filter((p) => p.categoria === categoria);
 
-  // Obtener productos en oferta
   const productosEnOferta = productos.filter((p) => p.enOferta);
 
   return (
@@ -95,5 +102,4 @@ export const ProductsProvider = ({ children }) => {
   );
 };
 
-// ✅ Agregamos este hook para facilitar el uso del contexto
 export const useProducts = () => useContext(ProductsContext);

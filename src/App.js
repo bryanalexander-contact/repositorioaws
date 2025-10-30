@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
+import Categorias from "./pages/public/Categorias";
+import Ofertas from "./pages/public/Ofertas";
 import Home from "./pages/public/Home";
 import Productos from "./pages/public/Productos";
 import DetalleProducto from "./pages/public/DetalleProducto";
@@ -9,7 +10,6 @@ import Nosotros from "./pages/public/Nosotros";
 import Contacto from "./pages/public/Contacto";
 import Carrito from "./pages/public/Carrito";
 import Blogs from "./pages/public/Blogs";
-
 // 🧩 Admin
 import PanelAdmin from "./pages/admin/PanelAdmin";
 import PanelProductos from "./pages/admin/PanelProductos";
@@ -35,7 +35,7 @@ export default function App() {
               {/* 🏠 Rutas públicas */}
               <Route path="/" element={<Home />} />
               <Route path="/productos" element={<Productos />} />
-              <Route path="/producto/:id" element={<DetalleProducto />} />
+              <Route path="/detalle/:id" element={<DetalleProducto />} />
               <Route path="/registro" element={<Registro />} />
               <Route path="/login" element={<Login />} />
               <Route path="/nosotros" element={<Nosotros />} />
@@ -55,6 +55,10 @@ export default function App() {
               <Route path="/admin/NuevoUsuario" element={<NuevoUsuario />} />
               <Route path="/admin/EditarProducto/:id" element={<EditarProducto />} />
               <Route path="/admin/EditarUsuario/:id" element={<EditarUsuario />} />
+              <Route path="/categorias" element={<Categorias />} />
+        
+              <Route path="/ofertas" element={<Ofertas />} />
+              
             </Routes>
           </CartProvider>
         </ProductsProvider>
