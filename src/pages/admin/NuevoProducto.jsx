@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { useProducts } from "../../context/ProductsContext";
 import "../../assets/css/admin/nuevo-producto.css";
-import { Link } from "react-router-dom"; // ✅ necesario
+import { Link } from "react-router-dom";
+
 function NuevoProducto() {
-  const { agregarProducto } = useProducts();
+  const { agregarProducto, categorias } = useProducts();
   const [form, setForm] = useState({
     codigo: "",
     nombre: "",
     descripcion: "",
     precio: 0,
+    precioOferta: "",
     stock: 0,
     stockCritico: 0,
     categoria: "",
@@ -35,6 +37,7 @@ function NuevoProducto() {
       nombre: "",
       descripcion: "",
       precio: 0,
+      precioOferta: "",
       stock: 0,
       stockCritico: 0,
       categoria: "",
@@ -57,27 +60,39 @@ function NuevoProducto() {
         <form onSubmit={handleSubmit}>
           <label>Código Producto</label>
           <input name="codigo" value={form.codigo} onChange={handleChange} required />
+
           <label>Nombre</label>
           <input name="nombre" value={form.nombre} onChange={handleChange} required />
+
           <label>Descripción</label>
           <textarea name="descripcion" value={form.descripcion} onChange={handleChange} />
+
           <label>Precio</label>
           <input type="number" name="precio" value={form.precio} onChange={handleChange} required />
+
+          <label>Precio Oferta (opcional)</label>
+          <input type="number" name="precioOferta" value={form.precioOferta || ""} onChange={handleChange} />
+
           <label>Stock</label>
           <input type="number" name="stock" value={form.stock} onChange={handleChange} required />
+
           <label>Stock Crítico</label>
           <input type="number" name="stockCritico" value={form.stockCritico} onChange={handleChange} />
+
           <label>Categoría</label>
           <select name="categoria" value={form.categoria} onChange={handleChange}>
             <option value="">Seleccione categoría</option>
-            <option value="Electrónica">Electrónica</option>
-            <option value="Ropa">Ropa</option>
-            <option value="Hogar">Hogar</option>
+            {categorias.map(cat => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
           </select>
+
           <label>Imagen (archivo)</label>
           <input type="file" name="imagenArchivo" onChange={handleChange} />
+
           <label>O URL de imagen</label>
           <input type="text" name="imagen" value={form.imagen} onChange={handleChange} />
+
           <button type="submit">Agregar Producto</button>
         </form>
       </main>

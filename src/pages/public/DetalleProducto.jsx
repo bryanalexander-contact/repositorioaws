@@ -4,6 +4,7 @@ import { useCart } from "../../context/CartContext";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "../../components/organisms/Header";
 import Footer from "../../components/organisms/Footer";
+import ProductCard from "../../components/molecules/ProductCard";
 
 export default function DetalleProducto() {
   const { productos } = useProducts();
@@ -42,7 +43,7 @@ export default function DetalleProducto() {
     <>
       <Header />
 
-      <div className="detalle-producto p-4">
+      <div className="detalle-producto p-4 flex flex-col gap-4">
         <div className="flex gap-4">
           <img
             src={producto.imagen || "/img/placeholder.png"}
@@ -51,7 +52,20 @@ export default function DetalleProducto() {
           />
           <div className="flex-1">
             <h2 className="text-xl font-bold">{producto.nombre}</h2>
-            <p className="text-lg">${producto.precio.toFixed(2)}</p>
+            {/* Precio con oferta */}
+            {producto.precioOferta && producto.precioOferta < producto.precio ? (
+              <p>
+                <span className="line-through text-red-500 mr-2">
+                  ${producto.precio.toLocaleString()}
+                </span>
+                <span className="text-red-700 font-bold">
+                  ${producto.precioOferta.toLocaleString()}
+                </span>
+              </p>
+            ) : (
+              <p className="text-lg font-bold">${producto.precio.toLocaleString()}</p>
+            )}
+
             <p>{producto.descripcion}</p>
             <div className="mt-2">
               <label>Cantidad:</label>
@@ -77,19 +91,7 @@ export default function DetalleProducto() {
             <h3 className="font-bold mb-2">Productos relacionados</h3>
             <div className="grid grid-cols-4 gap-4">
               {relacionados.map((p) => (
-                <div
-                  key={p.id}
-                  className="related-item cursor-pointer border p-2"
-                  onClick={() => navigate(`/detalle/${p.id}`)}
-                >
-                  <img
-                    src={p.imagen || "/img/placeholder.png"}
-                    alt={p.nombre}
-                    className="w-full h-32 object-cover"
-                  />
-                  <h4 className="font-bold">{p.nombre}</h4>
-                  <p>${p.precio.toFixed(2)}</p>
-                </div>
+                <ProductCard key={p.id} producto={p} onAddToCart={addToCart} />
               ))}
             </div>
           </div>

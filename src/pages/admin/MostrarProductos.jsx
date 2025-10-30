@@ -8,14 +8,22 @@ function MostrarProductos() {
 
   return (
     <div className="admin-container">
+      {/* Sidebar */}
       <aside className="sidebar">
         <h2>Panel Productos</h2>
         <ul>
-          <li><Link to="/admin/MostrarProductos" className="active">Mostrar Productos</Link></li>
-          <li><Link to="/admin/NuevoProducto">Nuevo Producto</Link></li>
+          <li>
+            <Link to="/admin/MostrarProductos" className="active">
+              Mostrar Productos
+            </Link>
+          </li>
+          <li>
+            <Link to="/admin/NuevoProducto">Nuevo Producto</Link>
+          </li>
         </ul>
       </aside>
 
+      {/* Main */}
       <main className="admin-main">
         <h1>Productos</h1>
         <table>
@@ -31,17 +39,43 @@ function MostrarProductos() {
             </tr>
           </thead>
           <tbody>
-            {productos.map(p => (
+            {productos.map((p) => (
               <tr key={p.id}>
                 <td>{p.id}</td>
                 <td>{p.codigo}</td>
                 <td>{p.nombre}</td>
-                <td>${p.precio}</td>
+                <td>
+                  {p.precioOferta && p.precioOferta < p.precio ? (
+                    <>
+                      <span className="line-through text-red-500 mr-1">
+                        ${p.precio.toLocaleString()}
+                      </span>
+                      <span className="text-green-600 font-bold">
+                        ${p.precioOferta.toLocaleString()}
+                      </span>
+                    </>
+                  ) : (
+                    <span>${p.precio.toLocaleString()}</span>
+                  )}
+                </td>
                 <td>{p.stock}</td>
                 <td>{p.categoria}</td>
                 <td>
                   <Link to={`/admin/editar-producto/${p.id}`}>Editar</Link>{" | "}
-                  <button onClick={() => eliminarProducto(p.id)}>Eliminar</button>
+                  <button
+                    className="btn-eliminar"
+                    onClick={() => {
+                      if (
+                        window.confirm(
+                          `¿Estás seguro de eliminar el producto "${p.nombre}"?`
+                        )
+                      ) {
+                        eliminarProducto(p.id);
+                      }
+                    }}
+                  >
+                    Eliminar
+                  </button>
                 </td>
               </tr>
             ))}
