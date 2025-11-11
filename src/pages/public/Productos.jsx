@@ -2,22 +2,25 @@
 import React, { useContext } from "react";
 import "../../assets/css/productos.css";
 import "../../assets/css/modelo.css";
-
 import Header from "../../components/organisms/Header";
 import Footer from "../../components/organisms/Footer";
-import ProductList from "../../components/organisms/ProductList";
 import { ProductsContext } from "../../context/ProductsContext";
+import ProductGridItem from "../../components/molecules/ProductGridItem";
 
 const Productos = () => {
-  const { productos } = useContext(ProductsContext); // 👈 Ya no usamos obtenerProductos
+  const { productos } = useContext(ProductsContext);
 
   return (
     <>
       <Header />
-      <main className="productos-page">
-        <h1>Productos</h1>
-        <div id="lista-productos" className="productos-grid">
-          <ProductList productos={productos} />
+      <main className="productos-page container my-5">
+        <h1 className="mb-4">Productos</h1>
+        <div className="row">
+          {productos.length > 0 ? (
+            productos.map((p) => <ProductGridItem key={p.id} producto={p} />)
+          ) : (
+            <p>No hay productos disponibles.</p>
+          )}
         </div>
       </main>
       <Footer />

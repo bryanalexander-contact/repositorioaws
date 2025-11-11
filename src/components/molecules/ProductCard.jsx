@@ -1,47 +1,67 @@
+// src/components/molecules/ProductCard.jsx
 import { Link } from "react-router-dom";
 import Button from "../atoms/Button";
 import Badge from "../atoms/Badge";
+import Alert from "../atoms/Alert";
 import "../../assets/css/product-card.css";
+import { useCart } from "../../context/CartContext";
+import { useState } from "react";
 
-export default function ProductCard({ producto, onAddToCart }) {
-  const { nombre, precio, precioOferta, imagen, categoria, id } = producto;
-
+export default function ProductCard({ producto }) {
+  const { addToCart } = useCart();
+  const { nombre, precio, precioOferta, imagen, categoria, id, stock = 0 } = producto;
+  const [mensaje, setMensaje] = useState("");
   const isOffer = precioOferta && precioOferta < precio;
 
+  const handleAddToCart = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    addToCart(producto);
+    setMensaje("✅ Producto agregado al carrito");
+    setTimeout(() => setMensaje(""), 2000);
+  };
+
   return (
-    <div className="product-card mb-4 position-relative">
-      {/* Badge de oferta usando el componente */}
-      {isOffer && (
-        <div className="position-absolute top-2 end-2">
-          <Badge label="Oferta" color="red" />
-        </div>
-      )}
+    <>
+      {mensaje && <Alert type="success" message={mensaje} />}
 
-      {/* Link al detalle */}
-      <Link to={`/detalle/${id}`} className="d-block text-decoration-none text-dark p-3">
-        <img src={imagen || "/img/placeholder.png"} alt={nombre} />
-        <h3 className="mt-2">{nombre}</h3>
-        <p className="categoria">{categoria}</p>
-        <div className="mt-2">
-          {isOffer ? (
-            <>
-              <span className="precio-original">${precio.toLocaleString()}</span>
-              <span className="precio-oferta">${precioOferta.toLocaleString()}</span>
-            </>
-          ) : (
-            <span className="precio-normal">${precio.toLocaleString()}</span>
-          )}
-        </div>
-      </Link>
+      <div className="product-card mb-4 position-relative">
+        {isOffer && (
+          <div className="position-absolute top-2 end-2">
+            <Badge label="Oferta" color="red" />
+          </div>
+        )}
 
-      {/* Botón agregar al carrito */}
-      {onAddToCart && (
+        <Link
+          to={`/detalle/${id}`}
+          className="d-block text-decoration-none text-dark p-3"
+        >
+          <img src={imagen || "/img/placeholder.png"} alt={nombre} />
+          <h3 className="mt-2">{nombre}</h3>
+          <p className="categoria">{categoria}</p>
+          <p className="text-muted mb-1">Stock disponible: {stock}</p>
+          <div className="mt-2">
+            {isOffer ? (
+              <>
+                <span className="precio-original">${precio.toLocaleString()}</span>
+                <span className="precio-oferta">${precioOferta.toLocaleString()}</span>
+              </>
+            ) : (
+              <span className="precio-normal">${precio.toLocaleString()}</span>
+            )}
+          </div>
+        </Link>
+
         <div className="p-3 pt-0">
-          <Button onClick={() => onAddToCart(producto)} className="btn-agregar">
+          <Button
+            onClick={handleAddToCart}
+            className="btn-agregar btn btn-primary w-100"
+            disabled={stock === 0}
+          >
             Agregar al carrito
           </Button>
         </div>
-      )}
-    </div>
+      </div>
+    </>
   );
 }

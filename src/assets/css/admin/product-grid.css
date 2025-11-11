@@ -1,0 +1,65 @@
+/* ===============================
+   🧩 GRID DE PRODUCTOS
+=============================== */
+.product-item {
+  flex: 1 1 calc(25% - 1rem);
+  max-width: calc(25% - 1rem);
+  margin: 0.5rem;
+}
+
+.product-card {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+}
+
+.product-image {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+/* === Responsive Grid === */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Tablets: 2 por fila */
+@media (max-width: 992px) {
+  .product-item {
+    flex: 1 1 calc(50% - 1rem);
+    max-width: calc(50% - 1rem);
+  }
+  .product-image {
+    height: 130px;
+  }
+}
+
+/* Celulares: 1 por fila */
+@media (max-width: 576px) {
+  .product-item {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+  .product-image {
+    height: 120px;
+  }
+}

@@ -54,8 +54,40 @@ header nav ul li a:hover {
     border-radius: 4px;
 }
 
-header .carrito img {
-    width: 28px;
+/* =========================
+   NUEVO BOTÓN DE CARRITO
+========================= */
+header .carrito {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+header .carrito a {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #444;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: #fff;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+header .carrito a:hover {
+    background: #666;
+    transform: scale(1.03);
+}
+
+header .carrito svg {
+    font-size: 20px;
+    color: #fff;
+}
+
+header .carrito .total {
+    font-size: 14px;
+    font-weight: 600;
 }
 
 /* =========================
@@ -200,6 +232,9 @@ footer {
     }
     .grid-productos {
         grid-template-columns: repeat(2, 1fr);
+    }
+    header .carrito a {
+        padding: 4px 8px;
     }
 }
 
