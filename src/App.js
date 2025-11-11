@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Categorias from "./pages/public/Categorias";
 import Ofertas from "./pages/public/Ofertas";
+import Checkout from "./pages/public/Checkout"; // import
 import Home from "./pages/public/Home";
 import Productos from "./pages/public/Productos";
 import DetalleProducto from "./pages/public/DetalleProducto";
@@ -42,6 +43,7 @@ export default function App() {
               <Route path="/contacto" element={<Contacto />} />
               <Route path="/carrito" element={<Carrito />} />
               <Route path="/blogs" element={<Blogs />} />
+              <Route path="/checkout" element={<Checkout />} />
 
               {/* ⚙️ Rutas Admin */}
               <Route path="/admin" element={<PanelAdmin />} />

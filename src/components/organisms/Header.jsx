@@ -2,9 +2,11 @@
 import { Link } from "react-router-dom";
 import "../../assets/css/modelo.css";
 import { useCart } from "../../context/CartContext";
+import { useUsers } from "../../context/UsersContext";
 
 export default function Header() {
   const { total } = useCart();
+  const { user, logout } = useUsers();
 
   // Formatear número como CLP (ej: 10.000)
   const formatoCLP = (valor) =>
@@ -25,9 +27,31 @@ export default function Header() {
           <li><Link to="/nosotros">Nosotros</Link></li> |
           <li><Link to="/blogs">Blog</Link></li> |
           <li><Link to="/contacto">Contacto</Link></li> |
-          <li><Link to="/login">Iniciar Sesión</Link></li> |
-          <li><Link to="/registro">Registro</Link></li> |
-          <li><Link to="/admin">Panel Admin</Link></li>
+          {user ? (
+            <>
+              <li><Link to="/admin/perfil">Perfil</Link></li> |
+              <li>
+                <button
+                  onClick={logout}
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "#222",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Cerrar Sesión
+                </button>
+              </li>
+            </>
+          ) : (
+            <>
+              <li><Link to="/login">Iniciar Sesión</Link></li> |
+              <li><Link to="/registro">Registro</Link></li>
+            </>
+          )}
+          | <li><Link to="/admin">Panel Admin</Link></li>
         </ul>
       </nav>
 

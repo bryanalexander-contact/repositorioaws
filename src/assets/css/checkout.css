@@ -1,0 +1,164 @@
+/* ===============================
+   🛒 ESTILOS DE CHECKOUT
+=============================== */
+
+.checkout-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* === Caja superior: carrito y total === */
+.checkout-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.checkout-header h3 {
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+
+.checkout-header span {
+  font-size: 1.5rem;
+  margin-right: 10px;
+}
+
+.checkout-header h4 {
+  font-weight: 700;
+  color: #2e7d32;
+}
+
+/* === Listado de productos === */
+.checkout-products {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.checkout-products .cart-header,
+.checkout-products .cart-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+}
+
+.checkout-products .cart-header {
+  font-weight: 600;
+  background-color: #f7f7f7;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.checkout-products .cart-item img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* Flex clases para cada columna */
+.flex-1 { flex: 1; text-align: center; }
+.flex-3 { flex: 3; text-align: left; }
+.text-end { text-align: right; }
+
+/* === Formulario === */
+.checkout-form {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.checkout-form h4 {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.checkout-form p {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.checkout-form label {
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+.checkout-form input,
+.checkout-form select,
+.checkout-form textarea {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+}
+
+.checkout-form textarea {
+  resize: none;
+}
+
+/* === Botón Pagar ahora con total === */
+.checkout-form .btn-success {
+  background-color: #2e7d32;
+  border: none;
+  color: #fff;
+  padding: 10px 20px;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+}
+
+.checkout-form .btn-success:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+.checkout-form h5 {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+/* === Responsive === */
+@media (max-width: 767px) {
+  .checkout-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .checkout-products .cart-header,
+  .checkout-products .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .checkout-form .row {
+    flex-direction: column;
+  }
+
+  .checkout-form .col-md-6 {
+    width: 100%;
+  }
+
+  .checkout-form .d-flex.justify-content-end {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+}

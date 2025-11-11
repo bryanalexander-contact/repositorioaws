@@ -1,6 +1,7 @@
 // src/components/organisms/CartSection.jsx
 import React from "react";
 import CartItem from "../molecules/CartItem";
+import { useNavigate } from "react-router-dom"; // Para redirección
 import Button from "../atoms/Button";
 import "../../assets/css/cart-section.css";
 
@@ -9,8 +10,9 @@ export default function CartSection({
   onRemove,
   onUpdate,
   onClear,
-  onCheckout,
 }) {
+  const navigate = useNavigate();
+
   const total = Array.isArray(items)
     ? items.reduce((sum, i) => {
         const precio =
@@ -20,6 +22,11 @@ export default function CartSection({
         return sum + precio * (i.cantidad || 1);
       }, 0)
     : 0;
+
+  const handleCheckout = () => {
+    // Redirige a checkout pasando los items del carrito
+    navigate("/checkout", { state: { carrito: items, total } });
+  };
 
   return (
     <div className="cart-section card shadow-sm p-3">
@@ -54,16 +61,16 @@ export default function CartSection({
           </div>
 
           {/* Total y botones */}
-          <div className="cart-footer">
-            <div className="cart-actions">
-              <Button className="btn btn-danger me-2" onClick={onClear}>
+          <div className="cart-footer d-flex justify-content-between align-items-center flex-wrap">
+            <div className="cart-actions d-flex gap-2">
+              <Button className="btn btn-danger" onClick={onClear}>
                 Limpiar
               </Button>
-              <Button className="btn btn-success" onClick={onCheckout}>
+              <Button className="btn btn-success" onClick={handleCheckout}>
                 Comprar ahora
               </Button>
             </div>
-            <h5 className="cart-total">
+            <h5 className="cart-total mt-2 mt-md-0">
               Total:{" "}
               <span className="text-success fw-bold">
                 ${total.toLocaleString()}
