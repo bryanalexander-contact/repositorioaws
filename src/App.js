@@ -21,7 +21,7 @@ import NuevoProducto from "./pages/admin/NuevoProducto";
 import NuevoUsuario from "./pages/admin/NuevoUsuario";
 import EditarProducto from "./pages/admin/EditarProducto";
 import EditarUsuario from "./pages/admin/EditarUsuario";
-
+import CompraExitosa from "./pages/public/CompraExitosa";
 import { CartProvider } from "./context/CartContext";
 import { ProductsProvider } from "./context/ProductsContext";
 import { UsersProvider } from "./context/UsersContext";
@@ -44,7 +44,7 @@ export default function App() {
               <Route path="/carrito" element={<Carrito />} />
               <Route path="/blogs" element={<Blogs />} />
               <Route path="/checkout" element={<Checkout />} />
-
+              <Route path="/compraexitosa" element={<CompraExitosa />} />
               {/* ⚙️ Rutas Admin */}
               <Route path="/admin" element={<PanelAdmin />} />
               <Route path="/admin/PanelProductos" element={<PanelProductos />} />
