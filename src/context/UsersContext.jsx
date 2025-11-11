@@ -5,7 +5,7 @@ export const UsersContext = createContext();
 
 export const UsersProvider = ({ children }) => {
   const [usuarios, setUsuarios] = useState([]);
-  const [user, setUser] = useState(null); // usuario logueado
+  const [user, setUser] = useState(null); // Usuario logueado
 
   useEffect(() => {
     const storedUsers = JSON.parse(localStorage.getItem("usuarios")) || [];
@@ -24,7 +24,6 @@ export const UsersProvider = ({ children }) => {
     usuarios.length > 0 ? Math.max(...usuarios.map((u) => u.id)) + 1 : 1;
 
   const registrar = (nuevo) => {
-    // Validar correo único
     if (usuarios.some(u => u.correo.toLowerCase() === nuevo.correo.toLowerCase())) {
       return { ok: false, message: "Ya existe un usuario con ese correo" };
     }
@@ -33,7 +32,6 @@ export const UsersProvider = ({ children }) => {
     const nuevos = [...usuarios, usuario];
     guardarUsuarios(nuevos);
 
-    // Auto login
     setUser(usuario);
     localStorage.setItem("userLogueado", JSON.stringify(usuario));
 
@@ -89,5 +87,4 @@ export const UsersProvider = ({ children }) => {
   );
 };
 
-// Hook para usar fácilmente
 export const useUsers = () => useContext(UsersContext);
