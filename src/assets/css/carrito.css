@@ -1,11 +1,29 @@
 /* ===============================
    🛒 ESTILOS DEL CARRITO
 =============================== */
+
+.carrito-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 80vh;
+}
+
+/* === Layout principal === */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* === Sección de carrito === */
 .cart-section {
   background-color: #fff;
-  border-radius: 10px;
-  padding: 1.5rem;
+  border-radius: 12px;
+  padding: 2rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  height: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .cart-section h4 {
@@ -14,6 +32,7 @@
   border-bottom: 2px solid #eee;
   padding-bottom: 10px;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 /* === Tabla del carrito === */
@@ -50,7 +69,7 @@
 .cart-item-row {
   background: #fff;
   border-bottom: 1px solid #eee;
-  border-radius: 4px;
+  border-radius: 6px;
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
@@ -77,12 +96,13 @@
   border-top: 2px solid #eee;
   margin-top: 15px;
   flex-wrap: wrap;
+  gap: 10px;
 }
 
 .cart-actions {
   display: flex;
   gap: 10px;
-  margin-bottom: 10px;
+  flex-wrap: wrap;
 }
 
 .cart-total {
@@ -93,27 +113,66 @@
 
 /* === Botones === */
 .btn {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   border-radius: 0.5rem;
-  padding: 6px 12px;
+  padding: 8px 16px;
+  transition: all 0.25s ease;
 }
 
 .btn-success {
   background-color: #2e7d32;
   border: none;
+  color: #fff;
 }
 
 .btn-danger {
   background-color: #d32f2f;
   border: none;
+  color: #fff;
 }
 
 .btn:hover {
+  transform: translateY(-2px);
   opacity: 0.9;
 }
 
-/* === Responsividad === */
-@media (max-width: 992px) {
+/* === RESPONSIVE === */
+@media (min-width: 992px) {
+  /* Productos 60%, carrito 40% */
+  .col-lg-8 {
+    flex: 0 0 60%;
+    max-width: 60%;
+  }
+  .col-lg-4 {
+    flex: 0 0 40%;
+    max-width: 40%;
+  }
+}
+
+@media (max-width: 991px) and (min-width: 768px) {
+  /* Tablets → 65 / 35 */
+  .col-lg-8 {
+    flex: 0 0 65%;
+    max-width: 65%;
+  }
+  .col-lg-4 {
+    flex: 0 0 35%;
+    max-width: 35%;
+  }
+}
+
+@media (max-width: 767px) {
+  /* Móviles → apilados */
+  .col-lg-8,
+  .col-lg-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .cart-section {
+    max-height: none;
+  }
+
   .cart-header {
     display: none;
   }
@@ -137,14 +196,10 @@
   .cart-footer {
     flex-direction: column;
     align-items: stretch;
-    gap: 10px;
-  }
-
-  .cart-actions {
-    justify-content: space-between;
   }
 }
 
+/* Hover elegante */
 .hover-scale {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }

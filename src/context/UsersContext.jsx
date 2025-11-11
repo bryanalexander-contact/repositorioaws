@@ -5,7 +5,7 @@ export const UsersContext = createContext();
 
 export const UsersProvider = ({ children }) => {
   const [usuarios, setUsuarios] = useState([]);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null); // usuario logueado
 
   useEffect(() => {
     const storedUsers = JSON.parse(localStorage.getItem("usuarios")) || [];
@@ -23,25 +23,33 @@ export const UsersProvider = ({ children }) => {
   const generarId = () =>
     usuarios.length > 0 ? Math.max(...usuarios.map((u) => u.id)) + 1 : 1;
 
-  const validarCorreo = (correo) =>
-    /@duoc\.cl$|@profesor\.duoc\.cl$|@gmail\.com$/.test(correo);
-
   const registrar = (nuevo) => {
+    // Validar correo único
+    if (usuarios.some(u => u.correo.toLowerCase() === nuevo.correo.toLowerCase())) {
+      return { ok: false, message: "Ya existe un usuario con ese correo" };
+    }
+
     const usuario = { ...nuevo, id: generarId() };
     const nuevos = [...usuarios, usuario];
     guardarUsuarios(nuevos);
+
+    // Auto login
+    setUser(usuario);
+    localStorage.setItem("userLogueado", JSON.stringify(usuario));
+
+    return { ok: true, user: usuario };
   };
 
   const login = (correo, password) => {
     const encontrado = usuarios.find(
-      (u) => u.correo === correo && u.password === password
+      (u) => u.correo.toLowerCase() === correo.toLowerCase() && u.password === password
     );
     if (encontrado) {
       setUser(encontrado);
       localStorage.setItem("userLogueado", JSON.stringify(encontrado));
-      return true;
+      return { ok: true, user: encontrado };
     }
-    return false;
+    return { ok: false, message: "Credenciales inválidas" };
   };
 
   const logout = () => {
@@ -57,6 +65,11 @@ export const UsersProvider = ({ children }) => {
   const actualizarUsuario = (id, datos) => {
     const nuevos = usuarios.map((u) => (u.id === id ? { ...u, ...datos } : u));
     guardarUsuarios(nuevos);
+    if (user?.id === id) {
+      const actualizado = { ...user, ...datos };
+      setUser(actualizado);
+      localStorage.setItem("userLogueado", JSON.stringify(actualizado));
+    }
   };
 
   return (
@@ -69,7 +82,6 @@ export const UsersProvider = ({ children }) => {
         logout,
         eliminarUsuario,
         actualizarUsuario,
-        validarCorreo,
       }}
     >
       {children}

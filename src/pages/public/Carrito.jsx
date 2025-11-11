@@ -1,4 +1,4 @@
-// ✅ Carrito.jsx corregido
+// ✅ Carrito.jsx ajustado (más espacio para el carrito)
 import React from "react";
 import { useProducts } from "../../context/ProductsContext";
 import { useCart } from "../../context/CartContext";
@@ -19,18 +19,18 @@ export default function Carrito() {
 
       <main className="carrito-container container-fluid py-5">
         <div className="row gx-4 gy-4">
-          {/* Productos disponibles */}
-          <section className="col-12 col-lg-8 border-end-lg pe-lg-4">
+          {/* 🛍 Productos disponibles */}
+          <section className="col-12 col-lg-7 border-end-lg pe-lg-4">
             <h3 className="mb-4 text-center text-lg-start fw-bold">
               🛍 Productos Disponibles
             </h3>
             <ProductGrid productos={productos} onAdd={addToCart} />
           </section>
 
-          {/* Carrito */}
-          <aside className="col-12 col-lg-4 ps-lg-4 mt-5 mt-lg-0">
+          {/* 🛒 Carrito */}
+          <aside className="col-12 col-lg-5 ps-lg-4 mt-5 mt-lg-0">
             <CartSection
-              items={carrito}        
+              items={carrito}
               onRemove={removeFromCart}
               onUpdate={updateQuantity}
               onClear={clearCart}
