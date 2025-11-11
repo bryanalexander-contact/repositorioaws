@@ -11,6 +11,7 @@ import Nosotros from "./pages/public/Nosotros";
 import Contacto from "./pages/public/Contacto";
 import Carrito from "./pages/public/Carrito";
 import Blogs from "./pages/public/Blogs";
+import CompraFallida from "./pages/public/CompraFallida";
 // 🧩 Admin
 import PanelAdmin from "./pages/admin/PanelAdmin";
 import PanelProductos from "./pages/admin/PanelProductos";
@@ -45,6 +46,7 @@ export default function App() {
               <Route path="/blogs" element={<Blogs />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/compraexitosa" element={<CompraExitosa />} />
+              <Route path="/comprafallida" element={<CompraFallida />} />
               {/* ⚙️ Rutas Admin */}
               <Route path="/admin" element={<PanelAdmin />} />
               <Route path="/admin/PanelProductos" element={<PanelProductos />} />
