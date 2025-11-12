@@ -1,24 +1,39 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import SidebarAdmin from "../../components/organisms/SidebarAdmin";
 import "../../assets/css/admin/index.css";
 
-function PanelAdmin() {
-  return (
-    <div className="admin-container">
-      <aside className="sidebar">
-        <h2>Panel Admin</h2>
-        <ul>
-          <li><Link to="/admin/PanelProductos">Productos</Link></li>
-          <li><Link to="/admin/PanelUsuarios">Usuarios</Link></li>
-        </ul>
-      </aside>
+export default function PanelAdmin() {
+  const navigate = useNavigate();
 
-      <main className="admin-main">
-        <h1>Bienvenido al Panel de Administración</h1>
-        <p>Selecciona una opción en el menú de la izquierda para empezar.</p>
+  const tarjetas = [
+    { titulo: "Boletas", ruta: "/admin/Boletas", icono: "🧾" },
+    { titulo: "Categorías", ruta: "/admin/Categorias", icono: "📦" },
+    { titulo: "Usuarios", ruta: "/admin/PanelUsuarios", icono: "👥" },
+    { titulo: "Reportes", ruta: "/admin/Reportes", icono: "📊" },
+    { titulo: "Perfil", ruta: "/admin/Perfil", icono: "⚙️" },
+    { titulo: "Productos", ruta: "/admin/PanelProductos", icono: "🛒" },
+    { titulo: "Nuevo Producto", ruta: "/admin/NuevoProducto", icono: "➕" },
+    { titulo: "Ver Productos", ruta: "/admin/MostrarProductos", icono: "📋" },
+  ];
+
+  return (
+    <div className="admin-layout">
+      <SidebarAdmin />
+
+      <main className="admin-content">
+        <h1>Panel de Administración</h1>
+        <p>Selecciona una opción para gestionar tu tienda.</p>
+
+        <div className="tarjetas-grid">
+          {tarjetas.map((t, i) => (
+            <div key={i} className="tarjeta" onClick={() => navigate(t.ruta)}>
+              <div className="tarjeta-icono">{t.icono}</div>
+              <h3>{t.titulo}</h3>
+            </div>
+          ))}
+        </div>
       </main>
     </div>
   );
 }
-
-export default PanelAdmin;

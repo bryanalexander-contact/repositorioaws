@@ -1,29 +1,23 @@
-import { Link, useLocation } from "react-router-dom";
+import React from "react";
+import { NavLink } from "react-router-dom";
+import "../../assets/css/admin/sidebar.css";
 
-export default function SidebarAdmin() {
-  const location = useLocation();
-
-  const links = [
-    { to: "/admin/mostrar-productos", label: "Productos" },
-    { to: "/admin/mostrar-usuarios", label: "Usuarios" },
-    { to: "/admin/ofertas", label: "Ofertas" },
-  ];
-
+const SidebarAdmin = () => {
   return (
-    <aside className="w-64 bg-gray-900 text-white min-h-screen p-5 space-y-3">
-      <h2 className="text-xl font-bold mb-4">Panel Admin</h2>
-      <ul>
-        {links.map((link) => (
-          <li key={link.to}>
-            <Link
-              to={link.to}
-              className={`block p-2 rounded ${location.pathname === link.to ? "bg-gray-700" : "hover:bg-gray-800"}`}
-            >
-              {link.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
+    <aside className="sidebar-admin">
+      <h2 className="sidebar-title">Panel Admin</h2>
+      <nav>
+        <ul>
+          <li><NavLink to="/admin" end>🏠 Dashboard</NavLink></li>
+          <li><NavLink to="/admin/Boletas">🧾 Boletas</NavLink></li>
+          <li><NavLink to="/admin/Categorias">📦 Categorías</NavLink></li>
+          <li><NavLink to="/admin/PanelUsuarios">👥 Usuarios</NavLink></li>
+          <li><NavLink to="/admin/Reportes">📊 Reportes</NavLink></li>
+          <li><NavLink to="/admin/Perfil">⚙️ Perfil</NavLink></li>
+        </ul>
+      </nav>
     </aside>
   );
-}
+};
+
+export default SidebarAdmin;

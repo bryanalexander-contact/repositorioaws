@@ -6,19 +6,29 @@ export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [carrito, setCarrito] = useState([]);
-  const usersContext = useContext(UsersContext);
-  const user = usersContext?.user || null;
+  const { user } = useContext(UsersContext) || {};
 
-  // 🔹 Cargar carrito al iniciar
+  // 🔹 Cargar carrito desde sessionStorage (más liviano)
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("carrito")) || [];
-    setCarrito(stored);
+    try {
+      const stored = JSON.parse(sessionStorage.getItem("carrito")) || [];
+      setCarrito(stored);
+    } catch {
+      setCarrito([]);
+    }
   }, []);
 
-  // 🔹 Guardar carrito
+  // 🔹 Guardar carrito (sin imágenes ni datos grandes)
   const guardarCarrito = (nuevo) => {
+    // Reducimos peso: eliminamos imágenes u otros campos grandes
+    const carritoReducido = nuevo.map(({ imagen, descripcion, ...rest }) => rest);
+
     setCarrito(nuevo);
-    localStorage.setItem("carrito", JSON.stringify(nuevo));
+    try {
+      sessionStorage.setItem("carrito", JSON.stringify(carritoReducido));
+    } catch (error) {
+      console.warn("⚠️ No se pudo guardar el carrito:", error);
+    }
   };
 
   // 🔹 Agregar producto
@@ -27,9 +37,7 @@ export const CartProvider = ({ children }) => {
     let nuevo;
     if (existente) {
       nuevo = carrito.map((i) =>
-        i.id === producto.id
-          ? { ...i, cantidad: i.cantidad + cantidad }
-          : i
+        i.id === producto.id ? { ...i, cantidad: i.cantidad + cantidad } : i
       );
     } else {
       nuevo = [...carrito, { ...producto, cantidad }];
@@ -50,18 +58,19 @@ export const CartProvider = ({ children }) => {
   };
 
   // 🔹 Vaciar carrito
-  const clearCart = () => guardarCarrito([]);
+  const clearCart = () => {
+    setCarrito([]);
+    sessionStorage.removeItem("carrito");
+  };
 
   // 🔹 Calcular total
   const total = carrito.reduce((sum, i) => {
     const precioUnitario =
-      i.precioOferta && i.precioOferta < i.precio
-        ? i.precioOferta
-        : i.precio;
+      i.precioOferta && i.precioOferta < i.precio ? i.precioOferta : i.precio;
     return sum + precioUnitario * i.cantidad;
   }, 0);
 
-  // 🔹 Obtener siguiente número de compra (incremental)
+  // 🔹 Obtener número correlativo de compra
   const obtenerNumeroCompra = () => {
     const historial = JSON.parse(localStorage.getItem("historialCompras")) || [];
     if (historial.length === 0) return 1;
@@ -69,7 +78,7 @@ export const CartProvider = ({ children }) => {
     return ult + 1;
   };
 
-  // 🔹 Checkout con validación + registro de compra
+  // 🔹 Checkout validado
   const checkout = (datosForm) => {
     const camposRequeridos = ["nombre", "email", "direccion"];
     const incompleto = camposRequeridos.some((f) => !datosForm[f]?.trim());
@@ -80,26 +89,28 @@ export const CartProvider = ({ children }) => {
       numeroCompra,
       fecha: new Date().toLocaleString(),
       comprador: datosForm,
-      productos: carrito,
+      productos: carrito.map(({ imagen, descripcion, ...p }) => p), // también reducimos aquí
       total,
       userId: user?.id || null,
     };
 
-    // Guardar en historial global
-    const historial = JSON.parse(localStorage.getItem("historialCompras")) || [];
-    localStorage.setItem("historialCompras", JSON.stringify([...historial, nuevaCompra]));
+    const historial =
+      JSON.parse(localStorage.getItem("historialCompras")) || [];
+    localStorage.setItem(
+      "historialCompras",
+      JSON.stringify([...historial, nuevaCompra])
+    );
 
-    // Esperamos que CompraExitosa muestre productos antes de limpiar
     setTimeout(() => clearCart(), 500);
 
     return {
       ok: true,
       redirect: "/compra-exitosa",
-      data: { ...nuevaCompra },
+      data: nuevaCompra,
     };
   };
 
-  // 🔹 Datos automáticos del usuario logueado
+  // 🔹 Datos prellenados si el usuario está logueado
   const datosCheckout = user
     ? {
         nombre: user.nombre || "",

@@ -10,6 +10,7 @@ import Login from "./pages/public/Login";
 import Nosotros from "./pages/public/Nosotros";
 import Contacto from "./pages/public/Contacto";
 import Carrito from "./pages/public/Carrito";
+import Perfil from "./pages/admin/Perfil";
 import Blogs from "./pages/public/Blogs";
 import CompraFallida from "./pages/public/CompraFallida";
 // 🧩 Admin
@@ -51,6 +52,10 @@ export default function App() {
               <Route path="/admin" element={<PanelAdmin />} />
               <Route path="/admin/PanelProductos" element={<PanelProductos />} />
               <Route path="/admin/PanelUsuarios" element={<PanelUsuarios />} />
+              <Route path="/admin/Boletas" element={<div>Boletas</div>} />
+              <Route path="/admin/Categorias" element={<Categorias />} />
+              <Route path="/admin/Reportes" element={<div>Reportes</div>} />
+              <Route path="/admin/Perfil" element={<Perfil />} />
 
               {/* Subsecciones Admin */}
               <Route path="/admin/MostrarProductos" element={<MostrarProductos />} />

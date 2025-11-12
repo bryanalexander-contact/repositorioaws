@@ -7,23 +7,36 @@ export const UsersProvider = ({ children }) => {
   const [user, setUser] = useState(null); // Usuario logueado
 
   useEffect(() => {
-    const storedUsers = JSON.parse(localStorage.getItem("usuarios")) || [];
-    setUsuarios(storedUsers);
+    try {
+      const storedUsers = JSON.parse(localStorage.getItem("usuarios")) || [];
+      setUsuarios(storedUsers);
 
-    const loggedUser = JSON.parse(localStorage.getItem("userLogueado"));
-    if (loggedUser) setUser(loggedUser);
+      const loggedUser = JSON.parse(localStorage.getItem("userLogueado"));
+      if (loggedUser) setUser(loggedUser);
+    } catch (err) {
+      console.error("Error cargando usuarios del localStorage:", err);
+      localStorage.clear(); // Limpia si el JSON está corrupto
+    }
   }, []);
 
   const guardarUsuarios = (lista) => {
     setUsuarios(lista);
-    localStorage.setItem("usuarios", JSON.stringify(lista));
+    try {
+      localStorage.setItem("usuarios", JSON.stringify(lista));
+    } catch (err) {
+      console.warn("⚠️ localStorage lleno, no se guardaron todos los usuarios.");
+    }
   };
 
   const generarId = () =>
     usuarios.length > 0 ? Math.max(...usuarios.map((u) => u.id)) + 1 : 1;
 
   const registrar = (nuevo) => {
-    if (usuarios.some(u => u.correo.toLowerCase() === nuevo.correo.toLowerCase())) {
+    if (
+      usuarios.some(
+        (u) => u.correo.toLowerCase() === nuevo.correo.toLowerCase()
+      )
+    ) {
       return { ok: false, message: "Ya existe un usuario con ese correo" };
     }
 
@@ -39,7 +52,9 @@ export const UsersProvider = ({ children }) => {
 
   const login = (correo, password) => {
     const encontrado = usuarios.find(
-      (u) => u.correo.toLowerCase() === correo.toLowerCase() && u.password === password
+      (u) =>
+        u.correo.toLowerCase() === correo.toLowerCase() &&
+        u.password === password
     );
     if (encontrado) {
       setUser(encontrado);
@@ -65,15 +80,18 @@ export const UsersProvider = ({ children }) => {
     if (user?.id === id) {
       const actualizado = { ...user, ...datos };
       setUser(actualizado);
-      localStorage.setItem("userLogueado", JSON.stringify(actualizado));
+      try {
+        localStorage.setItem("userLogueado", JSON.stringify(actualizado));
+      } catch (err) {
+        console.warn("⚠️ No se pudo actualizar userLogueado (storage lleno).");
+      }
     }
   };
 
   // ============================================================
-  // ✅ Registrar compra (con control de ejecución doble y número secuencial)
+  // ✅ Registrar compra (solo si fue EXITOSA)
   // ============================================================
   const registrarCompra = (compra) => {
-    // 🔹 Previene ejecuciones duplicadas simultáneas (por doble render, etc)
     if (sessionStorage.getItem("compra_en_progreso") === "true") {
       console.warn("⚠️ Compra ya se está registrando, evitando duplicado.");
       return parseInt(localStorage.getItem("ultimoNumeroCompra")) || 0;
@@ -81,18 +99,30 @@ export const UsersProvider = ({ children }) => {
     sessionStorage.setItem("compra_en_progreso", "true");
 
     try {
-      // 🔹 Generar número de compra incremental y confiable
       let ultimo = parseInt(localStorage.getItem("ultimoNumeroCompra")) || 0;
       const numeroCompra = ultimo + 1;
       localStorage.setItem("ultimoNumeroCompra", numeroCompra);
 
-      const compraConNumero = { ...compra, numeroCompra };
+      // 🔹 Guardamos una versión LIGERA de la compra (sin imágenes ni data innecesaria)
+      const compraConNumero = {
+        numeroCompra,
+        fecha: new Date().toISOString(),
+        total: compra.total,
+        comprador: compra.comprador,
+        productos: (compra.productos || []).map((p) => ({
+          id: p.id,
+          nombre: p.nombre,
+          cantidad: p.cantidad,
+          precio: p.precio,
+        })),
+      };
 
       if (user) {
         const actualizado = {
           ...user,
           historialCompras: [...(user.historialCompras || []), compraConNumero],
         };
+
         setUser(actualizado);
 
         const nuevosUsuarios = usuarios.map((u) =>
@@ -100,14 +130,34 @@ export const UsersProvider = ({ children }) => {
         );
         guardarUsuarios(nuevosUsuarios);
 
-        localStorage.setItem("userLogueado", JSON.stringify(actualizado));
+        // ✅ Guardamos solo una versión resumida del userLogueado
+        const userLigero = {
+          id: actualizado.id,
+          nombre: actualizado.nombre,
+          correo: actualizado.correo,
+          historialCompras: actualizado.historialCompras.slice(-10), // solo las últimas 10 compras
+        };
+
+        try {
+          localStorage.setItem("userLogueado", JSON.stringify(userLigero));
+        } catch {
+          console.warn("⚠️ No se pudo guardar userLogueado (storage lleno).");
+        }
       }
 
       return numeroCompra;
     } finally {
-      // 🔹 Libera el bloqueo al terminar correctamente
       sessionStorage.removeItem("compra_en_progreso");
     }
+  };
+
+  // ============================================================
+  // 🚫 Generar número TEMPORAL para compras fallidas
+  // (no se guarda ni incrementa el contador)
+  // ============================================================
+  const generarNumeroCompraFallida = () => {
+    const ultimo = parseInt(localStorage.getItem("ultimoNumeroCompra")) || 0;
+    return ultimo + 1; // Solo muestra el que habría tocado
   };
 
   // ============================================================
@@ -123,6 +173,7 @@ export const UsersProvider = ({ children }) => {
         eliminarUsuario,
         actualizarUsuario,
         registrarCompra,
+        generarNumeroCompraFallida, // 👈 Para CompraFallida.jsx
       }}
     >
       {children}
