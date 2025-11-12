@@ -1,0 +1,64 @@
+/* Contenedor principal */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Títulos */
+h2 {
+  margin-bottom: 2rem;
+  font-weight: 700;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Contenedor vertical para los recuadros */
+.reportes-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+/* Tarjetas de resumen */
+.report-card {
+  width: 100%;
+  max-width: 400px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.05);
+  transition: transform 0.2s;
+}
+
+.report-card:hover {
+  transform: translateY(-3px);
+}
+
+.report-card h4 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.metric-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #007bff;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .report-card {
+    max-width: 100%;
+    padding: 1.5rem;
+  }
+
+  .metric-number {
+    font-size: 2rem;
+  }
+}

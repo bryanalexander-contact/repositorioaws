@@ -72,7 +72,7 @@ export default function App() {
               <Route path="/admin/perfil" element={<Perfil />} />
               <Route path="/detalle-boleta/:id" element={<DetalleBoleta />} />
               <Route path="/admin/productoscriticos" element={<ProductosCriticos />} />
-
+                
               {/* 🧩 Subsecciones Admin */}
               <Route path="/admin/mostrarproductos" element={<MostrarProductos />} />
               <Route path="/admin/mostrarusuarios" element={<MostrarUsuarios />} />
