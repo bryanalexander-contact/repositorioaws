@@ -1,18 +1,33 @@
+// src/pages/admin/EditarProducto.jsx
 import React, { useState, useEffect } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useProducts } from "../../context/ProductsContext";
 import "../../assets/css/admin/editar-producto.css";
-import { Link } from "react-router-dom";
 
-function EditarProducto({ productoId }) {
+function EditarProducto() {
+  const { id } = useParams(); // obtiene el :id desde la URL
+  const productoId = parseInt(id, 10);
   const { productos, actualizarProducto, categorias } = useProducts();
   const [form, setForm] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const p = productos.find(p => p.id === productoId);
-    if (p) setForm({ ...p });
-  }, [productos, productoId]);
+    if (p) {
+      setForm({ ...p });
+    } else {
+      // si no encuentra producto, redirige al listado
+      navigate("/admin/MostrarProductos");
+    }
+  }, [productos, productoId, navigate]);
 
-  if (!form) return <p>Cargando producto...</p>;
+  if (!form) {
+    return (
+      <p style={{ padding: "20px", textAlign: "center" }}>
+        Cargando producto...
+      </p>
+    );
+  }
 
   const handleChange = e => {
     const { name, value, files } = e.target;
@@ -28,7 +43,8 @@ function EditarProducto({ productoId }) {
   const handleSubmit = e => {
     e.preventDefault();
     actualizarProducto(productoId, form);
-    alert("Producto actualizado!");
+    alert("✅ Producto actualizado correctamente");
+    navigate("/admin/MostrarProductos"); // redirige al listado después de guardar
   };
 
   return (
@@ -43,27 +59,28 @@ function EditarProducto({ productoId }) {
 
       <main className="admin-main">
         <h1>Editar Producto</h1>
-        <form onSubmit={handleSubmit}>
+
+        <form onSubmit={handleSubmit} className="form-editar">
           <label>Código</label>
-          <input name="codigo" value={form.codigo} onChange={handleChange} required />
+          <input name="codigo" value={form.codigo || ""} onChange={handleChange} required />
 
           <label>Nombre</label>
-          <input name="nombre" value={form.nombre} onChange={handleChange} required />
+          <input name="nombre" value={form.nombre || ""} onChange={handleChange} required />
 
           <label>Descripción</label>
-          <textarea name="descripcion" value={form.descripcion} onChange={handleChange} />
+          <textarea name="descripcion" value={form.descripcion || ""} onChange={handleChange} />
 
           <label>Precio</label>
-          <input type="number" name="precio" value={form.precio} onChange={handleChange} required />
+          <input type="number" name="precio" value={form.precio || 0} onChange={handleChange} required />
 
           <label>Precio Oferta (opcional)</label>
           <input type="number" name="precioOferta" value={form.precioOferta || ""} onChange={handleChange} />
 
           <label>Stock</label>
-          <input type="number" name="stock" value={form.stock} onChange={handleChange} required />
+          <input type="number" name="stock" value={form.stock || 0} onChange={handleChange} required />
 
           <label>Categoría</label>
-          <select name="categoria" value={form.categoria} onChange={handleChange}>
+          <select name="categoria" value={form.categoria || categorias[0]} onChange={handleChange}>
             {categorias.map(cat => (
               <option key={cat} value={cat}>{cat}</option>
             ))}
@@ -73,7 +90,7 @@ function EditarProducto({ productoId }) {
           <input type="file" name="imagenArchivo" onChange={handleChange} />
 
           <label>O URL de imagen</label>
-          <input type="text" name="imagen" value={form.imagen} onChange={handleChange} />
+          <input type="text" name="imagen" value={form.imagen || ""} onChange={handleChange} />
 
           <button type="submit">Guardar Cambios</button>
         </form>

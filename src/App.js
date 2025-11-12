@@ -32,6 +32,8 @@ import CategoriasAdmin from "./pages/admin/Categorias";
 import Reportes from "./pages/admin/Reportes";
 import Boletas from "./pages/admin/Boletas";
 import DetalleBoleta from "./pages/admin/DetalleBoleta";
+import ProductosCriticos from "./pages/admin/ProductosCriticos";
+
 // 🧠 Contextos
 import { CartProvider } from "./context/CartContext";
 import { ProductsProvider } from "./context/ProductsContext";
@@ -62,21 +64,22 @@ export default function App() {
 
               {/* ⚙️ Rutas Admin */}
               <Route path="/admin" element={<PanelAdmin />} />
-              <Route path="/admin/Boletas" element={<Boletas />} />
-              <Route path="/admin/Categorias" element={<CategoriasAdmin />} />
-              <Route path="/admin/PanelProductos" element={<PanelProductos />} />
-              <Route path="/admin/PanelUsuarios" element={<PanelUsuarios />} />
-              <Route path="/admin/Reportes" element={<Reportes />} />
-              <Route path="/admin/Perfil" element={<Perfil />} />
+              <Route path="/admin/boletas" element={<Boletas />} />
+              <Route path="/admin/categorias" element={<CategoriasAdmin />} />
+              <Route path="/admin/panelproductos" element={<PanelProductos />} />
+              <Route path="/admin/panelusuarios" element={<PanelUsuarios />} />
+              <Route path="/admin/reportes" element={<Reportes />} />
+              <Route path="/admin/perfil" element={<Perfil />} />
               <Route path="/detalle-boleta/:id" element={<DetalleBoleta />} />
+              <Route path="/admin/productoscriticos" element={<ProductosCriticos />} />
 
               {/* 🧩 Subsecciones Admin */}
-              <Route path="/admin/MostrarProductos" element={<MostrarProductos />} />
-              <Route path="/admin/MostrarUsuarios" element={<MostrarUsuarios />} />
-              <Route path="/admin/NuevoProducto" element={<NuevoProducto />} />
-              <Route path="/admin/NuevoUsuario" element={<NuevoUsuario />} />
-              <Route path="/admin/EditarProducto/:id" element={<EditarProducto />} />
-              <Route path="/admin/EditarUsuario/:id" element={<EditarUsuario />} />
+              <Route path="/admin/mostrarproductos" element={<MostrarProductos />} />
+              <Route path="/admin/mostrarusuarios" element={<MostrarUsuarios />} />
+              <Route path="/admin/nuevoproducto" element={<NuevoProducto />} />
+              <Route path="/admin/nuevousuario" element={<NuevoUsuario />} />
+              <Route path="/admin/editar-producto/:id" element={<EditarProducto />} />
+              <Route path="/admin/editar-usuario/:id" element={<EditarUsuario />} />
             </Routes>
           </CartProvider>
         </ProductsProvider>

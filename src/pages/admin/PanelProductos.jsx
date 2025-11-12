@@ -11,6 +11,7 @@ function PanelProductos() {
           <li><Link to="/admin/MostrarProductos">Mostrar Productos</Link></li>
           <li><Link to="/admin/NuevoProducto">Añadir Nuevo Producto</Link></li>
           <li><Link to="/admin/EditarProducto">Editar Productos</Link></li>
+          <li><Link to="/admin/ProductosCriticos">Listado de Productos Críticos</Link></li>
         </ul>
       </aside>
 
