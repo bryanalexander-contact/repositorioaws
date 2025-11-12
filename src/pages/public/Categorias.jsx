@@ -14,6 +14,12 @@ const Categorias = () => {
     ? productosPorCategoria(categoriaSeleccionada)
     : [];
 
+  // Agrupamos los productos en filas de 4
+  const filasDeProductos = Array.from(
+    { length: Math.ceil(productos.length / 4) },
+    (_, filaIndex) => productos.slice(filaIndex * 4, filaIndex * 4 + 4)
+  );
+
   return (
     <>
       <Header />
@@ -44,17 +50,20 @@ const Categorias = () => {
           Productos en <span className="text-primary">{categoriaSeleccionada}</span>
         </h2>
 
-        {/* Productos filtrados */}
-        <div className="row">
-          {productos.length === 0 && (
-            <p className="text-muted">No hay productos disponibles en esta categoría.</p>
-          )}
-          {productos.map((p) => (
-            <div className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" key={p.id}>
-              <ProductCard producto={p} />
+        {/* Productos filtrados en filas de 4 */}
+        {productos.length === 0 ? (
+          <p className="text-muted">No hay productos disponibles en esta categoría.</p>
+        ) : (
+          filasDeProductos.map((fila, index) => (
+            <div className="row mb-4" key={index}>
+              {fila.map((p) => (
+                <div className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" key={p.id}>
+                  <ProductCard producto={p} />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          ))
+        )}
       </div>
 
       <Footer />

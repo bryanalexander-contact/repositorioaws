@@ -4,19 +4,43 @@ export const ProductsContext = createContext();
 
 export const ProductsProvider = ({ children }) => {
   const [productos, setProductos] = useState([]);
-  const [categorias] = useState(["Electrónica", "Ropa", "Hogar", "Gamer"]);
+  const [categorias, setCategorias] = useState([
+    "Electrónica",
+    "Ropa",
+    "Hogar",
+    "Gamer",
+  ]);
   const [productoEditando, setProductoEditando] = useState(null);
 
+  // Cargar productos y categorías desde localStorage
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("productos")) || [];
-    setProductos(stored);
+    const storedProductos = JSON.parse(localStorage.getItem("productos")) || [];
+    setProductos(storedProductos);
+
+    const storedCategorias = JSON.parse(localStorage.getItem("categorias")) || [
+      "Electrónica",
+      "Ropa",
+      "Hogar",
+      "Gamer",
+    ];
+    setCategorias(storedCategorias);
   }, []);
 
+  // Guardar productos
   const guardarProductos = (lista) => {
     setProductos(lista);
     localStorage.setItem("productos", JSON.stringify(lista));
   };
 
+  // Guardar categorías
+  const guardarCategorias = (lista) => {
+    setCategorias(lista);
+    localStorage.setItem("categorias", JSON.stringify(lista));
+  };
+
+  // ======================================================
+  // PRODUCTOS
+  // ======================================================
   const generarId = () =>
     productos.length > 0 ? Math.max(...productos.map((p) => p.id)) + 1 : 1;
 
@@ -82,6 +106,23 @@ export const ProductsProvider = ({ children }) => {
 
   const productosEnOferta = productos.filter((p) => p.enOferta);
 
+  // ======================================================
+  // CATEGORÍAS
+  // ======================================================
+  const agregarCategoria = (categoria) => {
+    if (!categorias.includes(categoria)) {
+      const nuevas = [...categorias, categoria];
+      guardarCategorias(nuevas);
+    }
+  };
+
+  const eliminarCategoria = (categoria) => {
+    const nuevas = categorias.filter((c) => c !== categoria);
+    guardarCategorias(nuevas);
+    // Opcional: puedes eliminar la categoría de productos asociados
+    // setProductos(productos.map(p => p.categoria === categoria ? {...p, categoria: null} : p));
+  };
+
   return (
     <ProductsContext.Provider
       value={{
@@ -95,6 +136,8 @@ export const ProductsProvider = ({ children }) => {
         productosPorCategoria,
         productosEnOferta,
         toggleOferta,
+        agregarCategoria,
+        eliminarCategoria,
       }}
     >
       {children}

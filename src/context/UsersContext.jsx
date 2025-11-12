@@ -4,7 +4,7 @@ export const UsersContext = createContext();
 
 export const UsersProvider = ({ children }) => {
   const [usuarios, setUsuarios] = useState([]);
-  const [user, setUser] = useState(null); // Usuario logueado
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     try {
@@ -15,7 +15,7 @@ export const UsersProvider = ({ children }) => {
       if (loggedUser) setUser(loggedUser);
     } catch (err) {
       console.error("Error cargando usuarios del localStorage:", err);
-      localStorage.clear(); // Limpia si el JSON está corrupto
+      localStorage.clear();
     }
   }, []);
 
@@ -88,93 +88,70 @@ export const UsersProvider = ({ children }) => {
     }
   };
 
-  // ============================================================
-  // ✅ Registrar compra (solo si fue EXITOSA)
-  // ============================================================
   const registrarCompra = (compra) => {
-  // Evita doble registro por React StrictMode
-  if (sessionStorage.getItem("compra_en_progreso") === "true") {
-    console.warn("⚠️ Compra ya en progreso, evitando duplicado.");
-    return parseInt(localStorage.getItem("ultimoNumeroCompra")) || 0;
-  }
-  sessionStorage.setItem("compra_en_progreso", "true");
+    if (sessionStorage.getItem("compra_en_progreso") === "true") {
+      console.warn("⚠️ Compra ya en progreso, evitando duplicado.");
+      return parseInt(localStorage.getItem("ultimoNumeroCompra")) || 0;
+    }
+    sessionStorage.setItem("compra_en_progreso", "true");
 
-  try {
-    // Leer último número REAL
-    let ultimo = parseInt(localStorage.getItem("ultimoNumeroCompra")) || 0;
-    const numeroCompra = ultimo + 1;
+    try {
+      let ultimo = parseInt(localStorage.getItem("ultimoNumeroCompra")) || 0;
+      const numeroCompra = ultimo + 1;
 
-    // Actualizar el contador global
-    localStorage.setItem("ultimoNumeroCompra", numeroCompra.toString());
+      localStorage.setItem("ultimoNumeroCompra", numeroCompra.toString());
 
-    const compraConNumero = {
-      numeroCompra,
-      fecha: new Date().toISOString(),
-      total: compra.total,
-      comprador: compra.comprador,
-      productos: (compra.productos || []).map((p) => ({
-        id: p.id,
-        nombre: p.nombre,
-        cantidad: p.cantidad,
-        precio: p.precio,
-        imagen: p.imagen, // ✅ mantener imagen para DetalleBoleta
-      })),
-    };
-
-    if (user) {
-      // Evita duplicados exactos (por si renderiza doble)
-      const historial = user.historialCompras || [];
-      const yaExiste = historial.some(
-        (c) =>
-          c.total === compra.total &&
-          Math.abs(new Date(c.fecha) - new Date()) < 2000
-      );
-      if (yaExiste) return numeroCompra;
-
-      // 🔹 Mantener solo las 10 compras más recientes
-      const nuevoHistorial = [...historial, compraConNumero].slice(-10);
-
-      const actualizado = {
-        ...user,
-        historialCompras: nuevoHistorial,
+      const compraConNumero = {
+        numeroCompra,
+        fecha: new Date().toISOString(),
+        total: compra.total,
+        comprador: compra.comprador,
+        productos: (compra.productos || []).map((p) => ({
+          id: p.id,
+          nombre: p.nombre,
+          cantidad: p.cantidad,
+          precio: p.precio,
+          imagen: p.imagenURL || "", // ⚡ nunca File/Base64
+        })),
       };
 
-      setUser(actualizado);
+      if (user) {
+        const historial = user.historialCompras || [];
+        const yaExiste = historial.some(
+          (c) =>
+            c.total === compra.total &&
+            Math.abs(new Date(c.fecha) - new Date()) < 2000
+        );
+        if (yaExiste) return numeroCompra;
 
-      // Actualizar usuarios globales
-      const nuevosUsuarios = usuarios.map((u) =>
-        u.id === user.id ? actualizado : u
-      );
-      guardarUsuarios(nuevosUsuarios);
+        const nuevoHistorial = [...historial, compraConNumero].slice(-10);
+        const actualizado = { ...user, historialCompras: nuevoHistorial };
+        setUser(actualizado);
 
-      // Guardar usuario logueado con historial recortado
-      localStorage.setItem(
-        "userLogueado",
-        JSON.stringify({
-          ...actualizado,
-          historialCompras: nuevoHistorial,
-        })
-      );
+        const nuevosUsuarios = usuarios.map((u) =>
+          u.id === user.id ? actualizado : u
+        );
+        guardarUsuarios(nuevosUsuarios);
+
+        localStorage.setItem(
+          "userLogueado",
+          JSON.stringify({
+            ...actualizado,
+            historialCompras: nuevoHistorial,
+          })
+        );
+      }
+
+      return numeroCompra;
+    } finally {
+      sessionStorage.removeItem("compra_en_progreso");
     }
-
-    return numeroCompra;
-  } finally {
-    sessionStorage.removeItem("compra_en_progreso");
-  }
-};
-
-
-
-  // ============================================================
-  // 🚫 Generar número TEMPORAL para compras fallidas
-  // (no se guarda ni incrementa el contador)
-  // ============================================================
-  const generarNumeroCompraFallida = () => {
-    const ultimo = parseInt(localStorage.getItem("ultimoNumeroCompra")) || 0;
-    return ultimo + 1; // Solo muestra el que habría tocado
   };
 
-  // ============================================================
+  const generarNumeroCompraFallida = () => {
+    const ultimo = parseInt(localStorage.getItem("ultimoNumeroCompra")) || 0;
+    return ultimo + 1;
+  };
 
   return (
     <UsersContext.Provider
@@ -187,7 +164,7 @@ export const UsersProvider = ({ children }) => {
         eliminarUsuario,
         actualizarUsuario,
         registrarCompra,
-        generarNumeroCompraFallida, // 👈 Para CompraFallida.jsx
+        generarNumeroCompraFallida,
       }}
     >
       {children}

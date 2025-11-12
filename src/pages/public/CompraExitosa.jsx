@@ -1,3 +1,4 @@
+// src/pages/public/CompraExitosa.jsx
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "../../components/organisms/Header";
@@ -7,53 +8,37 @@ import { useUsers } from "../../context/UsersContext";
 import "../../assets/css/checkout.css";
 
 export default function CompraExitosa() {
-  const { clearCart } = useCart();
+  const { clearCart, carrito } = useCart();
   const { user, registrarCompra } = useUsers();
   const location = useLocation();
   const { total, comprador } = location.state || {};
   const [numeroCompra, setNumeroCompra] = useState(0);
   const [productos, setProductos] = useState([]);
-  const [yaRegistrado, setYaRegistrado] = useState(false);
 
   useEffect(() => {
-    if (yaRegistrado) return; // Evita doble registro
-    setYaRegistrado(true);
+    const productosReducidos = carrito.map((p) => ({
+      id: p.id,
+      nombre: p.nombre,
+      cantidad: p.cantidad,
+      precio: p.precio,
+      precioOferta: p.precioOferta,
+      imagen: p.imagenURL || "", // nunca File/Base64
+    }));
 
-    // 🔹 Obtener carrito o última compra
-    const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-    if (carrito.length > 0) {
-      localStorage.setItem("ultimaCompra", JSON.stringify(carrito));
-    }
-
-    const productosFinal =
-      carrito.length > 0
-        ? carrito
-        : JSON.parse(localStorage.getItem("ultimaCompra")) || [];
-
-    setProductos(productosFinal);
+    setProductos(productosReducidos);
 
     const nuevaCompra = {
       fecha: new Date().toLocaleString(),
       comprador: comprador || {},
-      productos: productosFinal,
+      productos: productosReducidos,
       total,
       userId: user?.id || null,
     };
 
-    // 🔹 Registrar compra y número
     const num = registrarCompra(nuevaCompra);
     setNumeroCompra(num);
 
-    // 🔹 Guardar historial global
-    const historial = JSON.parse(localStorage.getItem("historialCompras")) || [];
-    localStorage.setItem(
-      "historialCompras",
-      JSON.stringify([...historial, { ...nuevaCompra, numeroCompra: num }])
-    );
-
-    // 🔹 Vaciar carrito
     clearCart();
-    localStorage.removeItem("carrito");
   }, []);
 
   if (!comprador) {
@@ -67,7 +52,6 @@ export default function CompraExitosa() {
   return (
     <>
       <Header />
-
       <main className="container my-5">
         <div className="text-center mb-4">
           <h2 className="text-success fw-bold">✅ ¡Compra realizada con éxito!</h2>
@@ -87,19 +71,13 @@ export default function CompraExitosa() {
           <div className="mb-4">
             <h6 className="fw-bold border-bottom pb-2">Datos del Comprador</h6>
             <div className="row">
-              <div className="col-md-6">
-                <strong>Nombre:</strong> {comprador.nombre} {comprador.apellidos}
-              </div>
+              <div className="col-md-6"><strong>Nombre:</strong> {comprador.nombre} {comprador.apellidos}</div>
               <div className="col-md-6"><strong>Correo:</strong> {comprador.correo}</div>
               <div className="col-md-6"><strong>Dirección:</strong> {comprador.direccion}</div>
-              {comprador.departamento && (
-                <div className="col-md-6"><strong>Departamento:</strong> {comprador.departamento}</div>
-              )}
+              {comprador.departamento && <div className="col-md-6"><strong>Departamento:</strong> {comprador.departamento}</div>}
               <div className="col-md-6"><strong>Región:</strong> {comprador.region}</div>
               <div className="col-md-6"><strong>Comuna:</strong> {comprador.comuna}</div>
-              {comprador.indicacion && (
-                <div className="col-12"><strong>Indicaciones:</strong> {comprador.indicacion}</div>
-              )}
+              {comprador.indicacion && <div className="col-12"><strong>Indicaciones:</strong> {comprador.indicacion}</div>}
             </div>
           </div>
 
@@ -116,40 +94,26 @@ export default function CompraExitosa() {
 
               {productos.length > 0 ? (
                 productos.map((item) => {
-                  const precio =
-                    item.precioOferta && item.precioOferta < item.precio
-                      ? item.precioOferta
-                      : item.precio;
+                  const precio = item.precioOferta && item.precioOferta < item.precio ? item.precioOferta : item.precio;
                   return (
                     <div key={item.id} className="cart-item">
                       <div>
-                        <img
-                          src={item.imagen}
-                          alt={item.nombre}
-                          className="producto-imagen"
-                        />
+                        <img src={item.imagen} alt={item.nombre} className="producto-imagen"/>
                       </div>
                       <div className="nombre">{item.nombre}</div>
                       <div className="precio">${precio.toLocaleString()}</div>
                       <div className="cantidad">{item.cantidad}</div>
-                      <div className="subtotal">
-                        ${(precio * item.cantidad).toLocaleString()}
-                      </div>
+                      <div className="subtotal">${(precio * item.cantidad).toLocaleString()}</div>
                     </div>
                   );
                 })
               ) : (
-                <p className="text-center text-muted mt-3">
-                  No se encontraron productos.
-                </p>
+                <p className="text-center text-muted mt-3">No se encontraron productos.</p>
               )}
             </div>
 
             <div className="text-center mt-4">
-              <h4 className="fw-bold">
-                💰 Total Pagado:{" "}
-                <span className="text-success">${total?.toLocaleString()}</span>
-              </h4>
+              <h4 className="fw-bold">💰 Total Pagado: <span className="text-success">${total?.toLocaleString()}</span></h4>
             </div>
           </div>
 
@@ -159,7 +123,6 @@ export default function CompraExitosa() {
           </div>
         </div>
       </main>
-
       <Footer />
     </>
   );

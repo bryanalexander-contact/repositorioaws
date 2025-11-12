@@ -1,4 +1,4 @@
-// ✅ Carrito.jsx ajustado (más espacio para el carrito)
+// src/pages/public/Carrito.jsx
 import React from "react";
 import { useProducts } from "../../context/ProductsContext";
 import { useCart } from "../../context/CartContext";
@@ -10,7 +10,18 @@ import "../../assets/css/carrito.css";
 
 export default function Carrito() {
   const { productos } = useProducts();
-  const { carrito, addToCart, removeFromCart, updateQuantity, clearCart } = useCart();
+  const { carrito, addToCart, removeFromCart, updateQuantity, clearCart, checkout } = useCart();
+
+  // 🔹 Función de checkout simulada
+  const handleCheckout = () => {
+    const result = checkout({
+      nombre: "Juan Pérez",
+      email: "juan@example.com",
+      direccion: "Calle Falsa 123",
+    });
+    if (result.ok) alert(`Compra realizada con éxito! N° ${result.data.numeroCompra}`);
+    else alert("Faltan datos para completar la compra.");
+  };
 
   return (
     <>
@@ -30,11 +41,14 @@ export default function Carrito() {
           {/* 🛒 Carrito */}
           <aside className="col-12 col-lg-5 ps-lg-4 mt-5 mt-lg-0">
             <CartSection
-              items={carrito}
+              items={carrito.map((p) => ({
+                ...p,
+                imagen: p.imagenURL || p.imagen, // 🔹 usar URL local primero
+              }))}
               onRemove={removeFromCart}
               onUpdate={updateQuantity}
               onClear={clearCart}
-              onCheckout={() => alert("Compra realizada!")}
+              onCheckout={handleCheckout}
             />
           </aside>
         </div>

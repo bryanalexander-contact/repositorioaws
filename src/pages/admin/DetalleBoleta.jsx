@@ -106,7 +106,7 @@ export default function DetalleBoleta() {
                     <div key={item.id} className="cart-item">
                       <div>
                         <img
-                          src={item.imagen}
+                          src={item.imagenURL || item.imagen} // 🔹 usar URL local primero
                           alt={item.nombre}
                           className="producto-imagen"
                         />

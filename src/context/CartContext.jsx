@@ -1,4 +1,3 @@
-// src/context/CartContext.jsx
 import { createContext, useState, useEffect, useContext } from "react";
 import { UsersContext } from "./UsersContext";
 
@@ -8,7 +7,7 @@ export const CartProvider = ({ children }) => {
   const [carrito, setCarrito] = useState([]);
   const { user } = useContext(UsersContext) || {};
 
-  // 🔹 Cargar carrito desde sessionStorage (más liviano)
+  // 🔹 Cargar carrito desde sessionStorage
   useEffect(() => {
     try {
       const stored = JSON.parse(sessionStorage.getItem("carrito")) || [];
@@ -18,10 +17,16 @@ export const CartProvider = ({ children }) => {
     }
   }, []);
 
-  // 🔹 Guardar carrito (sin imágenes ni datos grandes)
+  // 🔹 Guardar carrito con campos esenciales
   const guardarCarrito = (nuevo) => {
-    // Reducimos peso: eliminamos imágenes u otros campos grandes
-    const carritoReducido = nuevo.map(({ imagen, descripcion, ...rest }) => rest);
+    const carritoReducido = nuevo.map((p) => ({
+      id: p.id,
+      nombre: p.nombre,
+      cantidad: p.cantidad,
+      precio: p.precio,
+      precioOferta: p.precioOferta,
+      imagenURL: p.imagenURL || "", // ⚡ nunca File/Base64
+    }));
 
     setCarrito(nuevo);
     try {
@@ -33,20 +38,29 @@ export const CartProvider = ({ children }) => {
 
   // 🔹 Agregar producto
   const addToCart = (producto, cantidad = 1) => {
-    const existente = carrito.find((i) => i.id === producto.id);
+    let prod = { ...producto };
+
+    // Si el producto es File (imagen subida localmente)
+    if (producto.imagen instanceof File) {
+      prod.imagenURL = URL.createObjectURL(producto.imagen);
+    }
+
+    const existente = carrito.find((i) => i.id === prod.id);
     let nuevo;
     if (existente) {
       nuevo = carrito.map((i) =>
-        i.id === producto.id ? { ...i, cantidad: i.cantidad + cantidad } : i
+        i.id === prod.id ? { ...i, cantidad: i.cantidad + cantidad } : i
       );
     } else {
-      nuevo = [...carrito, { ...producto, cantidad }];
+      nuevo = [...carrito, { ...prod, cantidad }];
     }
     guardarCarrito(nuevo);
   };
 
   // 🔹 Eliminar producto
   const removeFromCart = (id) => {
+    const prod = carrito.find((i) => i.id === id);
+    if (prod?.imagenURL && prod.imagen instanceof File) URL.revokeObjectURL(prod.imagenURL);
     guardarCarrito(carrito.filter((i) => i.id !== id));
   };
 
@@ -59,6 +73,9 @@ export const CartProvider = ({ children }) => {
 
   // 🔹 Vaciar carrito
   const clearCart = () => {
+    carrito.forEach((p) => {
+      if (p.imagenURL && p.imagen instanceof File) URL.revokeObjectURL(p.imagenURL);
+    });
     setCarrito([]);
     sessionStorage.removeItem("carrito");
   };
@@ -70,32 +87,31 @@ export const CartProvider = ({ children }) => {
     return sum + precioUnitario * i.cantidad;
   }, 0);
 
-  // 🔹 Obtener número correlativo de compra
-  const obtenerNumeroCompra = () => {
-    const historial = JSON.parse(localStorage.getItem("historialCompras")) || [];
-    if (historial.length === 0) return 1;
-    const ult = Math.max(...historial.map((c) => c.numeroCompra || 0));
-    return ult + 1;
-  };
-
   // 🔹 Checkout validado
   const checkout = (datosForm) => {
     const camposRequeridos = ["nombre", "email", "direccion"];
     const incompleto = camposRequeridos.some((f) => !datosForm[f]?.trim());
     if (incompleto) return { ok: false, redirect: "/compra-fallida" };
 
-    const numeroCompra = obtenerNumeroCompra();
+    const historial = JSON.parse(localStorage.getItem("historialCompras") || "[]");
+    const numeroCompra = historial.length + 1;
+
     const nuevaCompra = {
       numeroCompra,
-      fecha: new Date().toLocaleString(),
+      fecha: new Date().toISOString(),
       comprador: datosForm,
-      productos: carrito.map(({ imagen, descripcion, ...p }) => p), // también reducimos aquí
+      productos: carrito.map((p) => ({
+        id: p.id,
+        nombre: p.nombre,
+        cantidad: p.cantidad,
+        precio: p.precio,
+        precioOferta: p.precioOferta,
+        imagenURL: p.imagenURL || "", // ⚡ nunca File/Base64
+      })),
       total,
       userId: user?.id || null,
     };
 
-    const historial =
-      JSON.parse(localStorage.getItem("historialCompras")) || [];
     localStorage.setItem(
       "historialCompras",
       JSON.stringify([...historial, nuevaCompra])
