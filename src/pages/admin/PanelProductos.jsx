@@ -8,10 +8,11 @@ function PanelProductos() {
       <aside className="sidebar">
         <h2>Panel Productos</h2>
         <ul>
-          <li><Link to="/admin/MostrarProductos">Mostrar Productos</Link></li>
-          <li><Link to="/admin/NuevoProducto">Añadir Nuevo Producto</Link></li>
-          <li><Link to="/admin/EditarProducto">Editar Productos</Link></li>
-          <li><Link to="/admin/ProductosCriticos">Listado de Productos Críticos</Link></li>
+          <li><Link to="/admin/mostrarproductos">Mostrar Productos</Link></li>
+          <li><Link to="/admin/nuevoproducto">Añadir Nuevo Producto</Link></li>
+          <li><Link to="/admin/editarproducto">Editar Productos</Link></li>
+          <li><Link to="/admin/productoscriticos">Listado de Productos Críticos</Link></li>
+          <li><Link to="/admin/reporte-productos">Reporte Productos</Link></li>
         </ul>
       </aside>
 

@@ -34,6 +34,8 @@ import Boletas from "./pages/admin/Boletas";
 import DetalleBoleta from "./pages/admin/DetalleBoleta";
 import ProductosCriticos from "./pages/admin/ProductosCriticos";
 import HistorialCompras from "./pages/admin/HistorialCompras";
+import ReporteProductos from "./pages/admin/ReporteProductos";
+
 // 🧠 Contextos
 import { CartProvider } from "./context/CartContext";
 import { ProductsProvider } from "./context/ProductsContext";
@@ -62,26 +64,32 @@ export default function App() {
               <Route path="/categorias" element={<CategoriasPublic />} />
               <Route path="/ofertas" element={<Ofertas />} />
 
-              {/* ⚙️ Rutas Admin */}
+              {/* ⚙️ Panel Admin */}
               <Route path="/admin" element={<PanelAdmin />} />
+              <Route path="/admin/perfil" element={<Perfil />} />
               <Route path="/admin/boletas" element={<Boletas />} />
               <Route path="/admin/categorias" element={<CategoriasAdmin />} />
               <Route path="/admin/panelproductos" element={<PanelProductos />} />
               <Route path="/admin/panelusuarios" element={<PanelUsuarios />} />
               <Route path="/admin/reportes" element={<Reportes />} />
-              <Route path="/admin/perfil" element={<Perfil />} />
-              <Route path="/detalle-boleta/:id" element={<DetalleBoleta />} />
               <Route path="/admin/productoscriticos" element={<ProductosCriticos />} />
-                
-              {/* 🧩 Subsecciones Admin */}
+
+              {/* 🧩 Subsecciones Admin Productos */}
               <Route path="/admin/mostrarproductos" element={<MostrarProductos />} />
-              <Route path="/admin/mostrarusuarios" element={<MostrarUsuarios />} />
               <Route path="/admin/nuevoproducto" element={<NuevoProducto />} />
-              <Route path="/admin/nuevousuario" element={<NuevoUsuario />} />
               <Route path="/admin/editar-producto/:id" element={<EditarProducto />} />
+              <Route path="/admin/reporte-productos" element={<ReporteProductos />} />
+
+              {/* 🧩 Subsecciones Admin Usuarios */}
+              <Route path="/admin/mostrarusuarios" element={<MostrarUsuarios />} />
+              <Route path="/admin/nuevousuario" element={<NuevoUsuario />} />
               <Route path="/admin/editar-usuario/:id" element={<EditarUsuario />} />
+
+              {/* 🧩 Historial de Compras */}
               <Route path="/admin/historial-compras/:id" element={<HistorialCompras />} />
 
+              {/* 🧩 Detalle Boleta */}
+              <Route path="/detalle-boleta/:id" element={<DetalleBoleta />} />
             </Routes>
           </CartProvider>
         </ProductsProvider>
