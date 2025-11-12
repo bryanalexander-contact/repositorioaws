@@ -11,8 +11,8 @@ function MostrarUsuarios() {
       <aside className="sidebar">
         <h2>Panel Usuarios</h2>
         <ul>
-          <li><Link to="/admin/MostrarUsuarios" className="active">Mostrar Usuarios</Link></li>
-          <li><Link to="/admin/NuevoUsuario">Nuevo Usuario</Link></li>
+          <li><Link to="/admin/mostrarusuarios" className="active">Mostrar Usuarios</Link></li>
+          <li><Link to="/admin/nuevousuario">Nuevo Usuario</Link></li>
         </ul>
       </aside>
 
@@ -40,10 +40,13 @@ function MostrarUsuarios() {
                 <td>{u.region} / {u.comuna}</td>
                 <td>{u.direccion}</td>
                 <td>
-                  <Link to={`/admin/EditarUsuario/${u.id}`}>
+                  <Link to={`/admin/editar-usuario/${u.id}`}>
                     <button>Editar</button>
                   </Link>
                   <button onClick={() => eliminarUsuario(u.id)}>Eliminar</button>
+                  <Link to={`/admin/historial-compras/${u.id}`}>
+                    <button>Ver Historial</button>
+                  </Link>
                 </td>
               </tr>
             ))}

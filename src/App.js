@@ -33,7 +33,7 @@ import Reportes from "./pages/admin/Reportes";
 import Boletas from "./pages/admin/Boletas";
 import DetalleBoleta from "./pages/admin/DetalleBoleta";
 import ProductosCriticos from "./pages/admin/ProductosCriticos";
-
+import HistorialCompras from "./pages/admin/HistorialCompras";
 // 🧠 Contextos
 import { CartProvider } from "./context/CartContext";
 import { ProductsProvider } from "./context/ProductsContext";
@@ -80,6 +80,8 @@ export default function App() {
               <Route path="/admin/nuevousuario" element={<NuevoUsuario />} />
               <Route path="/admin/editar-producto/:id" element={<EditarProducto />} />
               <Route path="/admin/editar-usuario/:id" element={<EditarUsuario />} />
+              <Route path="/admin/historial-compras/:id" element={<HistorialCompras />} />
+
             </Routes>
           </CartProvider>
         </ProductsProvider>
