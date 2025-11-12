@@ -1,3 +1,4 @@
+// src/components/organisms/SidebarAdmin.jsx
 import React from "react";
 import { NavLink } from "react-router-dom";
 import "../../assets/css/admin/sidebar.css";
@@ -11,6 +12,7 @@ const SidebarAdmin = () => {
           <li><NavLink to="/admin" end>🏠 Dashboard</NavLink></li>
           <li><NavLink to="/admin/Boletas">🧾 Boletas</NavLink></li>
           <li><NavLink to="/admin/Categorias">📦 Categorías</NavLink></li>
+          <li><NavLink to="/admin/PanelProductos">🛍️ Productos</NavLink></li>
           <li><NavLink to="/admin/PanelUsuarios">👥 Usuarios</NavLink></li>
           <li><NavLink to="/admin/Reportes">📊 Reportes</NavLink></li>
           <li><NavLink to="/admin/Perfil">⚙️ Perfil</NavLink></li>

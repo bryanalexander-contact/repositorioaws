@@ -92,64 +92,78 @@ export const UsersProvider = ({ children }) => {
   // ✅ Registrar compra (solo si fue EXITOSA)
   // ============================================================
   const registrarCompra = (compra) => {
-    if (sessionStorage.getItem("compra_en_progreso") === "true") {
-      console.warn("⚠️ Compra ya se está registrando, evitando duplicado.");
-      return parseInt(localStorage.getItem("ultimoNumeroCompra")) || 0;
-    }
-    sessionStorage.setItem("compra_en_progreso", "true");
+  // Evita doble registro por React StrictMode
+  if (sessionStorage.getItem("compra_en_progreso") === "true") {
+    console.warn("⚠️ Compra ya en progreso, evitando duplicado.");
+    return parseInt(localStorage.getItem("ultimoNumeroCompra")) || 0;
+  }
+  sessionStorage.setItem("compra_en_progreso", "true");
 
-    try {
-      let ultimo = parseInt(localStorage.getItem("ultimoNumeroCompra")) || 0;
-      const numeroCompra = ultimo + 1;
-      localStorage.setItem("ultimoNumeroCompra", numeroCompra);
+  try {
+    // Leer último número REAL
+    let ultimo = parseInt(localStorage.getItem("ultimoNumeroCompra")) || 0;
+    const numeroCompra = ultimo + 1;
 
-      // 🔹 Guardamos una versión LIGERA de la compra (sin imágenes ni data innecesaria)
-      const compraConNumero = {
-        numeroCompra,
-        fecha: new Date().toISOString(),
-        total: compra.total,
-        comprador: compra.comprador,
-        productos: (compra.productos || []).map((p) => ({
-          id: p.id,
-          nombre: p.nombre,
-          cantidad: p.cantidad,
-          precio: p.precio,
-        })),
+    // Actualizar el contador global
+    localStorage.setItem("ultimoNumeroCompra", numeroCompra.toString());
+
+    const compraConNumero = {
+      numeroCompra,
+      fecha: new Date().toISOString(),
+      total: compra.total,
+      comprador: compra.comprador,
+      productos: (compra.productos || []).map((p) => ({
+        id: p.id,
+        nombre: p.nombre,
+        cantidad: p.cantidad,
+        precio: p.precio,
+        imagen: p.imagen, // ✅ mantener imagen para DetalleBoleta
+      })),
+    };
+
+    if (user) {
+      // Evita duplicados exactos (por si renderiza doble)
+      const historial = user.historialCompras || [];
+      const yaExiste = historial.some(
+        (c) =>
+          c.total === compra.total &&
+          Math.abs(new Date(c.fecha) - new Date()) < 2000
+      );
+      if (yaExiste) return numeroCompra;
+
+      // 🔹 Mantener solo las 10 compras más recientes
+      const nuevoHistorial = [...historial, compraConNumero].slice(-10);
+
+      const actualizado = {
+        ...user,
+        historialCompras: nuevoHistorial,
       };
 
-      if (user) {
-        const actualizado = {
-          ...user,
-          historialCompras: [...(user.historialCompras || []), compraConNumero],
-        };
+      setUser(actualizado);
 
-        setUser(actualizado);
+      // Actualizar usuarios globales
+      const nuevosUsuarios = usuarios.map((u) =>
+        u.id === user.id ? actualizado : u
+      );
+      guardarUsuarios(nuevosUsuarios);
 
-        const nuevosUsuarios = usuarios.map((u) =>
-          u.id === user.id ? actualizado : u
-        );
-        guardarUsuarios(nuevosUsuarios);
-
-        // ✅ Guardamos solo una versión resumida del userLogueado
-        const userLigero = {
-          id: actualizado.id,
-          nombre: actualizado.nombre,
-          correo: actualizado.correo,
-          historialCompras: actualizado.historialCompras.slice(-10), // solo las últimas 10 compras
-        };
-
-        try {
-          localStorage.setItem("userLogueado", JSON.stringify(userLigero));
-        } catch {
-          console.warn("⚠️ No se pudo guardar userLogueado (storage lleno).");
-        }
-      }
-
-      return numeroCompra;
-    } finally {
-      sessionStorage.removeItem("compra_en_progreso");
+      // Guardar usuario logueado con historial recortado
+      localStorage.setItem(
+        "userLogueado",
+        JSON.stringify({
+          ...actualizado,
+          historialCompras: nuevoHistorial,
+        })
+      );
     }
-  };
+
+    return numeroCompra;
+  } finally {
+    sessionStorage.removeItem("compra_en_progreso");
+  }
+};
+
+
 
   // ============================================================
   // 🚫 Generar número TEMPORAL para compras fallidas

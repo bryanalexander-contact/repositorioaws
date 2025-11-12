@@ -1,7 +1,7 @@
+// src/App.js
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Categorias from "./pages/public/Categorias";
-import Ofertas from "./pages/public/Ofertas";
-import Checkout from "./pages/public/Checkout"; // import
+
+// 🏠 Públicas
 import Home from "./pages/public/Home";
 import Productos from "./pages/public/Productos";
 import DetalleProducto from "./pages/public/DetalleProducto";
@@ -10,10 +10,14 @@ import Login from "./pages/public/Login";
 import Nosotros from "./pages/public/Nosotros";
 import Contacto from "./pages/public/Contacto";
 import Carrito from "./pages/public/Carrito";
-import Perfil from "./pages/admin/Perfil";
 import Blogs from "./pages/public/Blogs";
+import Checkout from "./pages/public/Checkout";
+import CompraExitosa from "./pages/public/CompraExitosa";
 import CompraFallida from "./pages/public/CompraFallida";
-// 🧩 Admin
+import CategoriasPublic from "./pages/public/Categorias";
+import Ofertas from "./pages/public/Ofertas";
+
+// ⚙️ Admin
 import PanelAdmin from "./pages/admin/PanelAdmin";
 import PanelProductos from "./pages/admin/PanelProductos";
 import PanelUsuarios from "./pages/admin/PanelUsuarios";
@@ -23,7 +27,12 @@ import NuevoProducto from "./pages/admin/NuevoProducto";
 import NuevoUsuario from "./pages/admin/NuevoUsuario";
 import EditarProducto from "./pages/admin/EditarProducto";
 import EditarUsuario from "./pages/admin/EditarUsuario";
-import CompraExitosa from "./pages/public/CompraExitosa";
+import Perfil from "./pages/admin/Perfil";
+import CategoriasAdmin from "./pages/admin/Categorias";
+import Reportes from "./pages/admin/Reportes";
+import Boletas from "./pages/admin/Boletas";
+import DetalleBoleta from "./pages/admin/DetalleBoleta";
+// 🧠 Contextos
 import { CartProvider } from "./context/CartContext";
 import { ProductsProvider } from "./context/ProductsContext";
 import { UsersProvider } from "./context/UsersContext";
@@ -35,7 +44,7 @@ export default function App() {
         <ProductsProvider>
           <CartProvider>
             <Routes>
-              {/* 🏠 Rutas públicas */}
+              {/* 🌐 Rutas públicas */}
               <Route path="/" element={<Home />} />
               <Route path="/productos" element={<Productos />} />
               <Route path="/detalle/:id" element={<DetalleProducto />} />
@@ -48,26 +57,26 @@ export default function App() {
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/compraexitosa" element={<CompraExitosa />} />
               <Route path="/comprafallida" element={<CompraFallida />} />
+              <Route path="/categorias" element={<CategoriasPublic />} />
+              <Route path="/ofertas" element={<Ofertas />} />
+
               {/* ⚙️ Rutas Admin */}
               <Route path="/admin" element={<PanelAdmin />} />
+              <Route path="/admin/Boletas" element={<Boletas />} />
+              <Route path="/admin/Categorias" element={<CategoriasAdmin />} />
               <Route path="/admin/PanelProductos" element={<PanelProductos />} />
               <Route path="/admin/PanelUsuarios" element={<PanelUsuarios />} />
-              <Route path="/admin/Boletas" element={<div>Boletas</div>} />
-              <Route path="/admin/Categorias" element={<Categorias />} />
-              <Route path="/admin/Reportes" element={<div>Reportes</div>} />
+              <Route path="/admin/Reportes" element={<Reportes />} />
               <Route path="/admin/Perfil" element={<Perfil />} />
+              <Route path="/detalle-boleta/:id" element={<DetalleBoleta />} />
 
-              {/* Subsecciones Admin */}
+              {/* 🧩 Subsecciones Admin */}
               <Route path="/admin/MostrarProductos" element={<MostrarProductos />} />
               <Route path="/admin/MostrarUsuarios" element={<MostrarUsuarios />} />
               <Route path="/admin/NuevoProducto" element={<NuevoProducto />} />
               <Route path="/admin/NuevoUsuario" element={<NuevoUsuario />} />
               <Route path="/admin/EditarProducto/:id" element={<EditarProducto />} />
               <Route path="/admin/EditarUsuario/:id" element={<EditarUsuario />} />
-              <Route path="/categorias" element={<Categorias />} />
-        
-              <Route path="/ofertas" element={<Ofertas />} />
-              
             </Routes>
           </CartProvider>
         </ProductsProvider>
