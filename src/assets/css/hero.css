@@ -1,0 +1,136 @@
+/* =========================
+   HERO SECTION
+========================= */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 60px 10%;
+  background: linear-gradient(135deg, #ffffff 0%, #f3f3f3 100%);
+  color: #222;
+  min-height: 70vh;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* === Texto principal === */
+.hero-texto {
+  flex: 1;
+  max-width: 600px;
+  animation: fadeInLeft 1s ease forwards;
+}
+
+.hero-texto h2 {
+  font-size: 3rem;
+  color: #111;
+  margin-bottom: 15px;
+  line-height: 1.2;
+}
+
+.hero-texto p {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 25px;
+}
+
+/* === Botón === */
+.hero-texto .btn {
+  display: inline-block;
+  background: #00c853;
+  color: #fff;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.hero-texto .btn:hover {
+  background: #00a844;
+  transform: scale(1.05);
+}
+
+/* === Imagen === */
+.hero-imagen {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  animation: fadeInRight 1s ease forwards;
+}
+
+.hero-imagen img {
+  max-width: 90%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.hero-imagen img:hover {
+  transform: scale(1.03);
+}
+
+/* =========================
+   ANIMACIONES
+========================= */
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 992px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 50px 5%;
+    gap: 30px;
+  }
+
+  .hero-texto h2 {
+    font-size: 2.4rem;
+  }
+
+  .hero-texto p {
+    font-size: 1.1rem;
+  }
+
+  .hero-imagen img {
+    max-width: 80%;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-texto h2 {
+    font-size: 2rem;
+  }
+
+  .hero-texto p {
+    font-size: 1rem;
+  }
+
+  .hero-texto .btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+}

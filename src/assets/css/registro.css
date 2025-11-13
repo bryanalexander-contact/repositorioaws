@@ -2,72 +2,125 @@
    FORMULARIO REGISTRO
 =========================== */
 .registro {
-    display: flex;
-    justify-content: center;
-    padding: 40px 20px;
-    background: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  padding: 60px 20px;
+  background: #f4f4f4;
+  font-family: "Poppins", "Segoe UI", sans-serif;
 }
 
 .form-container {
-    background: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 500px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  background: #fff;
+  padding: 40px 35px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.form-container:hover {
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
 }
 
 .form-container h2 {
-    margin-bottom: 20px;
-    text-align: center;
+  margin-bottom: 25px;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #222;
+  letter-spacing: 0.5px;
 }
 
 .form-container label {
-    display: block;
-    margin: 15px 0 5px;
-    font-weight: bold;
+  display: block;
+  margin: 15px 0 8px;
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+  letter-spacing: 0.3px;
 }
 
 .form-container input,
 .form-container select {
-    width: 100%;
-    padding: 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  color: #222;
+  background-color: #fafafa;
+  transition: all 0.2s ease-in-out;
 }
 
+.form-container input:focus,
+.form-container select:focus {
+  border-color: #007bff;
+  background-color: #fff;
+  box-shadow: 0 0 4px rgba(0,123,255,0.25);
+  outline: none;
+}
+
+/* Contenedores para selects */
 .selects {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
+  display: flex;
+  gap: 12px;
+  margin-top: 15px;
 }
 
 .select-box {
-    flex: 1;
+  flex: 1;
 }
 
+/* Botón */
 .boton {
-    text-align: center;
-    margin-top: 30px;
+  text-align: center;
+  margin-top: 35px;
 }
 
 .boton button {
-    background: #222;
-    color: #fff;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+  background: #007bff;
+  color: #fff;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: background 0.3s, transform 0.2s;
 }
 
 .boton button:hover {
-    background: #444;
+  background: #0056b3;
+  transform: translateY(-2px);
+}
+
+/* Texto pequeño o links */
+.form-container p {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.form-container a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.form-container a:hover {
+  text-decoration: underline;
 }
 
 /* Responsive */
 @media (max-width: 480px) {
-    .selects {
-        flex-direction: column;
-    }
-}
+  .form-container {
+    padding: 30px 20px;
+  }
 
+  .selects {
+    flex-direction: column;
+  }
+}

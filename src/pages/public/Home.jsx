@@ -5,6 +5,7 @@ import Footer from "../../components/organisms/Footer";
 import heroImg from "../../assets/img/tienda-online.jpeg";
 import "../../assets/css/index.css";
 import "../../assets/css/modelo.css";
+import "../../assets/css/hero.css";
 import { ProductsContext } from "../../context/ProductsContext";
 import ProductCard from "../../components/molecules/ProductCard";
 

@@ -1,35 +1,24 @@
 /* ============================
-   RESETEO Y FONDO GLOBAL
+   OFERTAS PAGE
 ============================ */
-html, body {
-  margin: 0;
-  padding: 0;
-  background-color: #ffffff; /* Fondo blanco total */
-  color: #333;
-  font-family: "Poppins", Arial, sans-serif;
-}
-
-/* ============================
-   PRODUCTOS PAGE
-============================ */
-.productos-page {
-  background-color: #ffffff; /* Fondo blanco */
+.ofertas-page {
+  background-color: #ffffff;
+  min-height: 100vh;
   padding-top: 40px;
-  padding-bottom: 60px;
-  display: block; /* No usar flex, evita dividir colores */
-  min-height: auto; /* Deja que crezca según contenido */
+  display: flex;
+  flex-direction: column;
 }
 
-.productos-container {
+.ofertas-container {
   width: 90%;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 0 auto 60px;
   text-align: center;
   background-color: #ffffff;
   padding: 20px 0;
 }
 
-.productos-container h1 {
+.ofertas-container h1 {
   font-size: 2rem;
   font-weight: 700;
   color: #222;
@@ -37,25 +26,32 @@ html, body {
 }
 
 /* ============================
-   GRID DE PRODUCTOS
+   GRID DE PRODUCTOS EN OFERTA
 ============================ */
-.productos-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+.ofertas-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
   gap: 25px;
-  justify-content: center;
-  align-items: stretch;
+  justify-items: center;
+  align-items: start;
   background-color: #ffffff;
 }
 
 .col-producto {
+  width: 100%;
   display: flex;
+  justify-content: center;
+}
+
+.product-card {
+  width: 100%;
+  max-width: 260px; /* controla el ancho de cada tarjeta */
 }
 
 /* ============================
-   TEXTO SIN PRODUCTOS
+   TEXTO SIN OFERTAS
 ============================ */
-.sin-productos {
+.sin-ofertas {
   grid-column: 1 / -1;
   font-size: 1.1rem;
   color: #666;
@@ -66,19 +62,19 @@ html, body {
    RESPONSIVE
 ============================ */
 @media (max-width: 1024px) {
-  .productos-grid {
+  .ofertas-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (max-width: 768px) {
-  .productos-grid {
+  .ofertas-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 500px) {
-  .productos-grid {
+  .ofertas-grid {
     grid-template-columns: 1fr;
   }
 }

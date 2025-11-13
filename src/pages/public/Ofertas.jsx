@@ -1,9 +1,9 @@
-// src/pages/public/Ofertas.jsx
-import { useContext } from "react";
-import { ProductsContext } from "../../context/ProductsContext"; 
-import ProductCard from "../../components/molecules/ProductCard"; 
+import React, { useContext } from "react";
+import "../../assets/css/ofertas.css";
 import Header from "../../components/organisms/Header";
 import Footer from "../../components/organisms/Footer";
+import { ProductsContext } from "../../context/ProductsContext";
+import ProductCard from "../../components/molecules/ProductCard";
 
 export default function Ofertas() {
   const { productosEnOferta } = useContext(ProductsContext);
@@ -11,20 +11,23 @@ export default function Ofertas() {
   return (
     <>
       <Header />
+      <main className="ofertas-page">
+        <section className="ofertas-container">
+          <h1>Productos en Oferta</h1>
 
-      <main className="p-6">
-        <h2 className="text-2xl font-bold mb-4">Productos en Oferta</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          {productosEnOferta.length > 0 ? (
-            productosEnOferta.map((p) => (
-              <ProductCard key={p.id} producto={p} />
-            ))
-          ) : (
-            <p>No hay productos en oferta por el momento.</p>
-          )}
-        </div>
+          <div className="ofertas-grid">
+            {productosEnOferta.length > 0 ? (
+              productosEnOferta.map((p) => (
+                <div key={p.id} className="col-producto">
+                  <ProductCard producto={p} />
+                </div>
+              ))
+            ) : (
+              <p className="sin-ofertas">No hay productos en oferta por el momento.</p>
+            )}
+          </div>
+        </section>
       </main>
-
       <Footer />
     </>
   );
