@@ -1,5 +1,5 @@
 /* ===============================
-   🛒 ESTILOS DEL CARRITO
+   🛒 ESTILOS DEL CARRITO (igual diseño, botones visibles)
 =============================== */
 
 .carrito-container {
@@ -111,34 +111,47 @@
   font-size: 1.1rem;
 }
 
-/* === Botones === */
+/* === Botones visibles y con hover elegante === */
 .btn {
   font-size: 0.9rem;
   border-radius: 0.5rem;
-  padding: 8px 16px;
+  padding: 9px 18px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
   transition: all 0.25s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .btn-success {
   background-color: #2e7d32;
-  border: none;
   color: #fff;
+}
+
+.btn-success:hover {
+  background-color: #256629;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(46, 125, 50, 0.25);
 }
 
 .btn-danger {
   background-color: #d32f2f;
-  border: none;
   color: #fff;
 }
 
-.btn:hover {
+.btn-danger:hover {
+  background-color: #b71c1c;
   transform: translateY(-2px);
-  opacity: 0.9;
+  box-shadow: 0 4px 10px rgba(211, 47, 47, 0.25);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* === RESPONSIVE === */
 @media (min-width: 992px) {
-  /* Productos 60%, carrito 40% */
   .col-lg-8 {
     flex: 0 0 60%;
     max-width: 60%;
@@ -150,7 +163,6 @@
 }
 
 @media (max-width: 991px) and (min-width: 768px) {
-  /* Tablets → 65 / 35 */
   .col-lg-8 {
     flex: 0 0 65%;
     max-width: 65%;
@@ -162,7 +174,6 @@
 }
 
 @media (max-width: 767px) {
-  /* Móviles → apilados */
   .col-lg-8,
   .col-lg-4 {
     flex: 0 0 100%;
@@ -199,7 +210,7 @@
   }
 }
 
-/* Hover elegante */
+/* === Hover elegante general === */
 .hover-scale {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }

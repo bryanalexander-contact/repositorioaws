@@ -5,6 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Header from "../../components/organisms/Header";
 import Footer from "../../components/organisms/Footer";
 import ProductCard from "../../components/molecules/ProductCard";
+import "../../assets/css/detalle-producto.css";
 
 export default function DetalleProducto() {
   const { productos } = useProducts();
@@ -43,53 +44,55 @@ export default function DetalleProducto() {
     <>
       <Header />
 
-      <div className="detalle-producto p-4 flex flex-col gap-4">
-        <div className="flex gap-4">
+      <div className="detalle-producto">
+        <div className="detalle-producto-contenido">
           <img
             src={producto.imagen || "/img/placeholder.png"}
             alt={producto.nombre}
-            className="w-64 h-64 object-cover"
           />
-          <div className="flex-1">
-            <h2 className="text-xl font-bold">{producto.nombre}</h2>
-            {/* Precio con oferta */}
+
+          <div className="detalle-info">
+            <h2>{producto.nombre}</h2>
+
             {producto.precioOferta && producto.precioOferta < producto.precio ? (
-              <p>
-                <span className="line-through text-red-500 mr-2">
+              <p className="precio">
+                <span className="precio-original">
                   ${producto.precio.toLocaleString()}
                 </span>
-                <span className="text-red-700 font-bold">
+                <span className="precio-oferta">
                   ${producto.precioOferta.toLocaleString()}
                 </span>
               </p>
             ) : (
-              <p className="text-lg font-bold">${producto.precio.toLocaleString()}</p>
+              <p className="precio">${producto.precio.toLocaleString()}</p>
             )}
 
-            <p>{producto.descripcion}</p>
-            <div className="mt-2">
-              <label>Cantidad:</label>
+            <p className="descripcion">{producto.descripcion}</p>
+
+            <div className="cantidad-control">
+              <label htmlFor="cantidad">Cantidad:</label>
               <input
+                id="cantidad"
                 type="number"
                 min="1"
                 value={cantidad}
                 onChange={(e) => setCantidad(parseInt(e.target.value) || 1)}
-                className="border p-1 w-16 ml-2"
               />
             </div>
+
             <button
-              className="bg-green-500 text-white px-4 py-2 mt-2"
+              className="btn-agregar"
               onClick={() => addToCart(producto, cantidad)}
             >
-              Añadir al carrito
+              🛒 Añadir al carrito
             </button>
           </div>
         </div>
 
         {relacionados.length > 0 && (
-          <div className="related-products mt-6">
-            <h3 className="font-bold mb-2">Productos relacionados</h3>
-            <div className="grid grid-cols-4 gap-4">
+          <div className="related-products">
+            <h3>Productos relacionados</h3>
+            <div className="grid">
               {relacionados.map((p) => (
                 <ProductCard key={p.id} producto={p} onAddToCart={addToCart} />
               ))}
