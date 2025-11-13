@@ -1,4 +1,9 @@
 // src/App.js
+import React from "react"; // 🔹 Agrega esto al principio
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// ... resto de imports
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // 🏠 Públicas
