@@ -1,21 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import cartImg from '../assets/img/cart.jpg';
-import blog1Img from '../assets/img/imagen-blog1.jpeg';
-import blog2Img from '../assets/img/imagen-blog1-2.jpg';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import '../assets/css/blogs.css';
-import '../assets/css/modelo.css';
-
+import cart from '../../assets/img/cart.jpg'; // ✅ corregido
+import blog1Img from '../../assets/img/imagen-blog1.jpeg';
+import blog2Img from '../../assets/img/imagen-blog1-2.jpg';
+import Header from '../../components/organisms/Header';  // ✅ ojo, también corregir si tu Header/Footer están en /components/organisms
+import Footer from '../../components/organisms/Footer';
+import '../../assets/css/blogs.css';
+import '../../assets/css/modelo.css';
 
 function Blogs() {
   return (
     <>
-      {/* Header */}
       <Header />
-
-      {/* Main */}
       <main className="container my-5">
         <h1 className="mb-4">Noticias importantes</h1>
 
@@ -51,8 +47,6 @@ function Blogs() {
           </div>
         </div>
       </main>
-
-      {/* Footer */}
       <Footer />
     </>
   );

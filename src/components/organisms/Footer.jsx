@@ -1,3 +1,5 @@
+import React from 'react';
+
 function Footer() {
   return (
     <footer>
@@ -10,6 +12,7 @@ function Footer() {
           <span>Amex</span>
         </div>
       </div>
+
       <div className="footer-right">
         <h3>Quedemos en contacto</h3>
         <form>

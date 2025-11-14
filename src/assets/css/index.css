@@ -2,106 +2,139 @@
    PRODUCTOS
 =========================== */
 .productos {
-    padding: 20px;
-    text-align: center;
+  padding: 20px;
+  text-align: center;
+  background-color: #f9f9f9; /* Fondo claro uniforme */
 }
 
 .productos h2 {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
+  color: #222;
 }
 
+/* Contenedor de productos - corrige conflictos Bootstrap/Grid */
 .grid-productos {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 columnas en escritorio */
-    gap: 20px;
+  display: flex; /* ✅ Flex para mantener compatibilidad Bootstrap */
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  box-sizing: border-box;
 }
 
+/* Cada producto ocupa 1/4 del ancho (4 por fila en escritorio) */
+.grid-productos .col-md-3 {
+  flex: 0 0 calc(25% - 20px);
+  max-width: calc(25% - 20px);
+  box-sizing: border-box;
+}
+
+/* Tarjeta de producto */
 .producto {
-    background: #fff;
-    padding: 15px;
-    border-radius: 6px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: transform 0.3s, box-shadow 0.3s;
-    cursor: pointer;
+  background: #fff;
+  padding: 15px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
 }
 
 .producto:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
 .producto img {
-    width: 100%;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    object-fit: cover;
+  width: 100%;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  object-fit: cover;
 }
 
 .producto h3 {
-    margin: 10px 0;
-    font-size: 18px;
+  margin: 10px 0;
+  font-size: 18px;
+  color: #222;
 }
 
 .producto p {
-    font-size: 14px;
-    margin-bottom: 8px;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #555;
 }
 
 .producto .precio {
-    font-weight: bold;
-    color: #007B00;
-    text-align: right;
-    margin-bottom: 10px;
+  font-weight: bold;
+  color: #007B00;
+  text-align: right;
+  margin-bottom: 10px;
 }
 
+/* Botón agregar al carrito */
 .producto button.add-to-cart {
-    padding: 8px;
-    border: none;
-    border-radius: 4px;
-    background: #007B00;
-    color: #fff;
-    cursor: pointer;
-    transition: background 0.3s;
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+  background: #007B00;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
 }
 
 .producto button.add-to-cart:hover {
-    background: #005500;
+  background: #005500;
+  transform: scale(1.05);
 }
 
 /* ===========================
    RESPONSIVE
 =========================== */
 @media (max-width: 1024px) {
-    .grid-productos {
-        grid-template-columns: repeat(2, 1fr); /* 2 columnas en tablet */
-    }
+  /* 2 columnas en tablets */
+  .grid-productos .col-md-3 {
+    flex: 0 0 calc(50% - 20px);
+    max-width: calc(50% - 20px);
+  }
 }
 
 @media (max-width: 768px) {
-    .hero {
-        flex-direction: column;
-        text-align: center;
-    }
-    .hero-texto {
-        padding: 0;
-    }
+  .hero {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero-texto {
+    padding: 0;
+  }
+
+  /* 2 columnas pequeñas */
+  .grid-productos .col-md-3 {
+    flex: 0 0 calc(50% - 20px);
+    max-width: calc(50% - 20px);
+  }
 }
 
 @media (max-width: 480px) {
-    .grid-productos {
-        grid-template-columns: 1fr; /* 1 columna en móvil */
-    }
-    header nav ul {
-        flex-direction: column;
-        align-items: center;
-    }
-    footer {
-        flex-direction: column;
-        text-align: center;
-        gap: 20px;
-    }
+  /* 1 columna móvil */
+  .grid-productos .col-md-3 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  header nav ul {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  footer {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
 }

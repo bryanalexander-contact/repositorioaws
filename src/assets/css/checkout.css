@@ -1,0 +1,219 @@
+/* ===============================
+   🛒 ESTILOS DE CHECKOUT / COMPRA EXITOSA
+=============================== */
+
+.checkout-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-bottom: 50px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* === Caja superior: Carrito + Total === */
+.checkout-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.checkout-header h3 {
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.checkout-header h3 span {
+  font-size: 1.6rem;
+  color: #2e7d32;
+}
+
+.checkout-header h4 {
+  font-weight: 700;
+  color: #2e7d32;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.2rem;
+}
+
+/* === LISTADO DE PRODUCTOS === */
+.checkout-products {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Encabezado */
+.checkout-products .cart-header {
+  display: flex;
+  align-items: center;
+  background-color: #f9fafb;
+  font-weight: 600;
+  color: #333;
+  padding: 10px 12px;
+  border-bottom: 1px solid #e0e0e0;
+  border-radius: 6px;
+}
+
+/* Filas de productos */
+.checkout-products .cart-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  gap: 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.checkout-products .cart-item:last-child {
+  border-bottom: none;
+}
+
+/* Columnas */
+.checkout-products .cart-header > div,
+.checkout-products .cart-item > div {
+  flex: 1;
+  text-align: center;
+}
+
+.checkout-products .cart-header > div:first-child,
+.checkout-products .cart-item > div:first-child {
+  flex: 0 0 80px;
+}
+
+.checkout-products .cart-header > div:nth-child(2),
+.checkout-products .cart-item > div:nth-child(2) {
+  flex: 2;
+  text-align: left;
+  padding-left: 10px;
+}
+
+.checkout-products .cart-header > div:nth-child(3),
+.checkout-products .cart-header > div:nth-child(4),
+.checkout-products .cart-header > div:nth-child(5),
+.checkout-products .cart-item > div:nth-child(3),
+.checkout-products .cart-item > div:nth-child(4),
+.checkout-products .cart-item > div:nth-child(5) {
+  flex: 0 0 120px;
+  text-align: center;
+}
+
+/* Imagen del producto */
+.checkout-products .producto-imagen {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+/* Texto */
+.checkout-products .nombre {
+  font-weight: 600;
+  color: #222;
+}
+
+.checkout-products .precio,
+.checkout-products .subtotal {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.checkout-products .cantidad {
+  color: #555;
+}
+
+/* === FORMULARIO === */
+.checkout-form {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.checkout-form h4 {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.checkout-form p {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1.2rem;
+}
+
+/* Inputs */
+.checkout-form input,
+.checkout-form select,
+.checkout-form textarea {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 0.9rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+  background-color: #fff;
+}
+
+.checkout-form input:focus,
+.checkout-form select:focus,
+.checkout-form textarea:focus {
+  border-color: #2e7d32;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.1);
+}
+
+/* === BOTONES === */
+button.btn {
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+}
+
+button.btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .checkout-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .checkout-products .cart-header {
+    display: none;
+  }
+
+  .checkout-products .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    gap: 6px;
+    padding: 10px;
+  }
+
+  .checkout-products .producto-imagen {
+    width: 70px;
+    height: 70px;
+  }
+
+  .checkout-form {
+    padding: 1.4rem;
+  }
+
+  .checkout-form .btn-success {
+    width: 100%;
+    justify-content: center;
+  }
+}

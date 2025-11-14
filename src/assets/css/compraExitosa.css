@@ -1,0 +1,32 @@
+.compra-exitosa .resumen-compra {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #fff;
+}
+
+.compra-exitosa .numero-compra {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.compra-exitosa .datos-comprador ul li {
+  padding: 4px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.compra-exitosa .productos-comprados .cart-header,
+.compra-exitosa .productos-comprados .cart-item {
+  display: flex;
+  align-items: center;
+}
+
+.flex-1 { flex: 1; }
+.flex-3 { flex: 3; }
+
+button.btn {
+  min-width: 180px;
+  font-weight: bold;
+  border-radius: 8px;
+}

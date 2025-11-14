@@ -59,7 +59,8 @@ body {
   color: #fff;
 }
 
-.sidebar a.active {
+.sidebar a.active,
+.sidebar a.activo {
   background-color: #fff;
   color: #000;
   font-weight: bold;
@@ -83,6 +84,59 @@ body {
   font-size: 1.1rem;
   color: #ccc;
   line-height: 1.6;
+}
+
+/* ==== TABLA DE PRODUCTOS CRÍTICOS ==== */
+.tabla-productos {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 30px;
+  background-color: #111;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+.tabla-productos th,
+.tabla-productos td {
+  padding: 12px 15px;
+  text-align: center;
+  border-bottom: 1px solid #222;
+}
+
+.tabla-productos th {
+  background-color: #222;
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tabla-productos tr:hover {
+  background-color: #1a1a1a;
+}
+
+.sin-productos {
+  margin-top: 40px;
+  font-size: 1.1rem;
+  color: #999;
+  text-align: center;
+}
+
+.sin-stock {
+  background-color: rgba(255, 0, 0, 0.15);
+}
+
+.oferta {
+  color: #2ecc71;
+  font-weight: bold;
+}
+
+.tabla-productos img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
 }
 
 /* ==== RESPONSIVE ==== */
@@ -115,5 +169,14 @@ body {
   .admin-main {
     padding: 20px;
     text-align: center;
+  }
+
+  .tabla-productos {
+    font-size: 0.85rem;
+  }
+
+  .tabla-productos img {
+    width: 45px;
+    height: 45px;
   }
 }

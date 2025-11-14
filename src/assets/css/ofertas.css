@@ -1,0 +1,80 @@
+/* ============================
+   OFERTAS PAGE
+============================ */
+.ofertas-page {
+  background-color: #ffffff;
+  min-height: 100vh;
+  padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ofertas-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto 60px;
+  text-align: center;
+  background-color: #ffffff;
+  padding: 20px 0;
+}
+
+.ofertas-container h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 30px;
+}
+
+/* ============================
+   GRID DE PRODUCTOS EN OFERTA
+============================ */
+.ofertas-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 25px;
+  justify-items: center;
+  align-items: start;
+  background-color: #ffffff;
+}
+
+.col-producto {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.product-card {
+  width: 100%;
+  max-width: 260px; /* controla el ancho de cada tarjeta */
+}
+
+/* ============================
+   TEXTO SIN OFERTAS
+============================ */
+.sin-ofertas {
+  grid-column: 1 / -1;
+  font-size: 1.1rem;
+  color: #666;
+  margin-top: 20px;
+}
+
+/* ============================
+   RESPONSIVE
+============================ */
+@media (max-width: 1024px) {
+  .ofertas-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .ofertas-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .ofertas-grid {
+    grid-template-columns: 1fr;
+  }
+}
