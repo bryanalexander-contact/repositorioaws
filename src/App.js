@@ -36,6 +36,10 @@ import ProductosCriticos from "./pages/admin/ProductosCriticos";
 import HistorialCompras from "./pages/admin/HistorialCompras";
 import ReporteProductos from "./pages/admin/ReporteProductos";
 
+// 🆕 RUTAS NUEVAS
+import ListaProductos from "./components/ListaProductos";
+import ProductoComponent from "./components/ProductoComponent";
+
 // 🧠 Contextos
 import { CartProvider } from "./context/CartContext";
 import { ProductsProvider } from "./context/ProductsContext";
@@ -48,6 +52,7 @@ export default function App() {
         <ProductsProvider>
           <CartProvider>
             <Routes>
+
               {/* 🌐 Rutas públicas */}
               <Route path="/" element={<Home />} />
               <Route path="/productos" element={<Productos />} />
@@ -63,6 +68,11 @@ export default function App() {
               <Route path="/comprafallida" element={<CompraFallida />} />
               <Route path="/categorias" element={<CategoriasPublic />} />
               <Route path="/ofertas" element={<Ofertas />} />
+
+              {/* 🆕 Rutas nuevas de prueba */}
+              <Route path="/lista-productos" element={<ListaProductos />} />
+              <Route path="/add-producto" element={<ProductoComponent />} />
+              <Route path="/edit-producto/:id" element={<ProductoComponent />} />
 
               {/* ⚙️ Panel Admin */}
               <Route path="/admin" element={<PanelAdmin />} />
@@ -90,6 +100,7 @@ export default function App() {
 
               {/* 🧩 Detalle Boleta */}
               <Route path="/detalle-boleta/:id" element={<DetalleBoleta />} />
+
             </Routes>
           </CartProvider>
         </ProductsProvider>
