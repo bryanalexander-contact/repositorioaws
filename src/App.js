@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// 🏠 Públicas
+// 🌐 Públicas
 import Home from "./pages/public/Home";
 import Productos from "./pages/public/Productos";
 import DetalleProducto from "./pages/public/DetalleProducto";
@@ -36,7 +36,7 @@ import ProductosCriticos from "./pages/admin/ProductosCriticos";
 import HistorialCompras from "./pages/admin/HistorialCompras";
 import ReporteProductos from "./pages/admin/ReporteProductos";
 
-// 🆕 RUTAS NUEVAS
+// 🆕 Componentes nuevos CRUD
 import ListaProductos from "./components/ListaProductos";
 import ProductoComponent from "./components/ProductoComponent";
 
@@ -69,7 +69,7 @@ export default function App() {
               <Route path="/categorias" element={<CategoriasPublic />} />
               <Route path="/ofertas" element={<Ofertas />} />
 
-              {/* 🆕 Rutas nuevas de prueba */}
+              {/* 🆕 CRUD nuevo con componentes */}
               <Route path="/lista-productos" element={<ListaProductos />} />
               <Route path="/add-producto" element={<ProductoComponent />} />
               <Route path="/edit-producto/:id" element={<ProductoComponent />} />
@@ -84,21 +84,21 @@ export default function App() {
               <Route path="/admin/reportes" element={<Reportes />} />
               <Route path="/admin/productoscriticos" element={<ProductosCriticos />} />
 
-              {/* 🧩 Subsecciones Admin Productos */}
+              {/* 🧩 Admin Productos */}
               <Route path="/admin/mostrarproductos" element={<MostrarProductos />} />
               <Route path="/admin/nuevoproducto" element={<NuevoProducto />} />
               <Route path="/admin/editar-producto/:id" element={<EditarProducto />} />
               <Route path="/admin/reporte-productos" element={<ReporteProductos />} />
 
-              {/* 🧩 Subsecciones Admin Usuarios */}
+              {/* 🧩 Admin Usuarios */}
               <Route path="/admin/mostrarusuarios" element={<MostrarUsuarios />} />
               <Route path="/admin/nuevousuario" element={<NuevoUsuario />} />
               <Route path="/admin/editar-usuario/:id" element={<EditarUsuario />} />
 
-              {/* 🧩 Historial de Compras */}
+              {/* 🧾 Historial de compras */}
               <Route path="/admin/historial-compras/:id" element={<HistorialCompras />} />
 
-              {/* 🧩 Detalle Boleta */}
+              {/* 🧾 Detalle boleta */}
               <Route path="/detalle-boleta/:id" element={<DetalleBoleta />} />
 
             </Routes>

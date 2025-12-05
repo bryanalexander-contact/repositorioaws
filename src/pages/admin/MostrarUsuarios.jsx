@@ -1,60 +1,21 @@
 import React from "react";
-import { useUsers } from "../../context/UsersContext";
+import ListaUsuarios from "../../components/ListaUsuarios";
 import "../../assets/css/admin/mostrar-usuarios.css";
-import { Link } from "react-router-dom";
 
-function MostrarUsuarios() {
-  const { usuarios, eliminarUsuario } = useUsers();
-
+export default function MostrarUsuarios() {
   return (
     <div className="admin-container">
       <aside className="sidebar">
         <h2>Panel Usuarios</h2>
         <ul>
-          <li><Link to="/admin/mostrarusuarios" className="active">Mostrar Usuarios</Link></li>
-          <li><Link to="/admin/nuevousuario">Nuevo Usuario</Link></li>
+          <li><a href="/admin/mostrarusuarios" className="active">Mostrar Usuarios</a></li>
+          <li><a href="/admin/nuevousuario">Nuevo Usuario</a></li>
         </ul>
       </aside>
 
       <main className="admin-main">
-        <h1>Mostrar Usuarios</h1>
-        <table>
-          <thead>
-            <tr>
-              <th>RUN</th>
-              <th>Nombre</th>
-              <th>Correo</th>
-              <th>Rol</th>
-              <th>Región / Comuna</th>
-              <th>Dirección</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {usuarios.map((u) => (
-              <tr key={u.id}>
-                <td>{u.run}</td>
-                <td>{u.nombre} {u.apellidos}</td>
-                <td>{u.correo}</td>
-                <td>{u.tipoUsuario}</td>
-                <td>{u.region} / {u.comuna}</td>
-                <td>{u.direccion}</td>
-                <td>
-                  <Link to={`/admin/editar-usuario/${u.id}`}>
-                    <button>Editar</button>
-                  </Link>
-                  <button onClick={() => eliminarUsuario(u.id)}>Eliminar</button>
-                  <Link to={`/admin/historial-compras/${u.id}`}>
-                    <button>Ver Historial</button>
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <ListaUsuarios />
       </main>
     </div>
   );
 }
-
-export default MostrarUsuarios;

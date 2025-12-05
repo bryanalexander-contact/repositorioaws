@@ -1,26 +1,47 @@
+// src/services/ProductService.js
 import api from './AxiosConfig';
 
-class ProductoService {
+const API_URL = 'http://54.234.15.47:4003'; // o la IP que uses
 
-    getAllProductos() {
-        return api.get('/productos');
-    }
+class ProductService {
+  getAll() {
+    return api.get(`${API_URL}/productos`);
+  }
 
-    createProducto(producto) {
-        return api.post('/productos', producto);
-    }
+  getByCategory(cat) {
+    return api.get(`${API_URL}/productos/categoria/${encodeURIComponent(cat)}`);
+  }
 
-    getProductoById(id) {
-        return api.get(`/productos/${id}`);
-    }
+  getById(id) {
+    return api.get(`${API_URL}/productos/${id}`);
+  }
 
-    updateProducto(id, producto) {
-        return api.put(`/productos/${id}`, producto);
-    }
+  create(obj) {
+    const form = new FormData();
+    Object.entries(obj).forEach(([k, v]) => {
+      // sólo anexar valores definidos
+      if (v !== null && v !== undefined) form.append(k, v);
+    });
 
-    deleteProducto(id) {
-        return api.delete(`/productos/${id}`);
-    }
+    // NO fijar Content-Type: dejar que el navegador lo ponga (incluye boundary)
+    return api.post(`${API_URL}/productos`, form);
+  }
+
+  update(id, obj) {
+    const form = new FormData();
+    Object.entries(obj).forEach(([k, v]) => {
+      if (v !== null && v !== undefined) form.append(k, v);
+    });
+
+    // NO fijar Content-Type
+    return api.put(`${API_URL}/productos/${id}`, form);
+  }
+
+  delete(id) {
+    return api.delete(`${API_URL}/productos/${id}`);
+  }
 }
 
-export default new ProductoService();
+export default new ProductService();
+
+

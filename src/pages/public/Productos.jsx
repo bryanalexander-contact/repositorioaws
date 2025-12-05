@@ -1,12 +1,21 @@
-import React, { useContext } from "react";
+import React, { useEffect, useState } from "react";
 import "../../assets/css/productos.css";
 import Header from "../../components/organisms/Header";
 import Footer from "../../components/organisms/Footer";
-import { ProductsContext } from "../../context/ProductsContext";
 import ProductCard from "../../components/molecules/ProductCard";
+import ProductService from "../../services/ProductService";
 
 const Productos = () => {
-  const { productos } = useContext(ProductsContext);
+  const [productos, setProductos] = useState([]);
+
+  useEffect(() => {
+    ProductService.getAll()
+      .then(res => setProductos(res.data || []))
+      .catch(err => {
+        console.error("Error cargando productos:", err);
+        setProductos([]);
+      });
+  }, []);
 
   return (
     <>

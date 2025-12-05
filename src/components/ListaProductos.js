@@ -9,48 +9,64 @@ const ListaProductos = () => {
         listarProductos();
     }, []);
 
-    const listarProductos = () => {
-        ProductService.getAllProductos()
-            .then(response => {
-                setProductos(response.data);
-            })
-            .catch(error => {
-                console.log(error);
-            });
+    const listarProductos = async () => {
+        try {
+            const res = await ProductService.getAllProductos();
+            setProductos(res.data);
+        } catch (error) {
+            console.log(error);
+        }
     };
 
-    const deleteProducto = (id) => {
-        if(window.confirm("¿Eliminar?")) {
-            ProductService.deleteProducto(id)
-                .then(() => listarProductos())
-                .catch(error => console.log(error));
+    const deleteProducto = async (id) => {
+        if (window.confirm("¿Eliminar producto?")) {
+            try {
+                await ProductService.deleteProducto(id);
+                listarProductos();
+            } catch (error) {
+                console.log(error);
+            }
         }
     };
 
     return (
         <div className="container p-4">
             <h2 className="text-center mb-4">Inventario</h2>
-            <Link to="/add-producto" className="btn btn-primary mb-3">Agregar Producto</Link>
+
+            <Link to="/add-producto" className="btn btn-primary mb-3">
+                Agregar Producto
+            </Link>
+
             <table className="table table-bordered">
                 <thead>
                     <tr>
-                        <th>ID</th><th>Nombre</th><th>Precio</th><th>Acciones</th>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
+
                 <tbody>
-                    {
-                        productos.map(p => (
-                            <tr key={p.id}>
-                                <td>{p.id}</td>
-                                <td>{p.nombre}</td>
-                                <td>${p.precio}</td>
-                                <td>
-                                    <Link className="btn btn-info mx-2" to={`/edit-producto/${p.id}`}>Editar</Link>
-                                    <button className="btn btn-danger" onClick={() => deleteProducto(p.id)}>Eliminar</button>
-                                </td>
-                            </tr>
-                        ))
-                    }
+                    {productos.map((p) => (
+                        <tr key={p.id}>
+                            <td>{p.id}</td>
+                            <td>{p.nombre}</td>
+                            <td>${p.precio}</td>
+                            <td>
+                                <Link className="btn btn-info mx-2" to={`/edit-producto/${p.id}`}>
+                                    Editar
+                                </Link>
+
+                                <button
+                                    className="btn btn-danger"
+                                    onClick={() => deleteProducto(p.id)}
+                                >
+                                    Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </div>

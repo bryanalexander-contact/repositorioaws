@@ -32,10 +32,7 @@ export default function ProductCard({ producto }) {
           </div>
         )}
 
-        <Link
-          to={`/detalle/${id}`}
-          className="d-block text-decoration-none text-dark p-3"
-        >
+        <Link to={`/detalle/${id}`} className="d-block text-decoration-none text-dark p-3">
           <img src={imagen || "/img/placeholder.png"} alt={nombre} />
           <h3 className="mt-2">{nombre}</h3>
           <p className="categoria">{categoria}</p>
