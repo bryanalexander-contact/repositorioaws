@@ -1,25 +1,18 @@
 // src/pages/public/Registro.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useUserAuth from "../../hooks/useUserAuth";
 import Header from "../../components/organisms/Header";
 import Footer from "../../components/organisms/Footer";
 import "../../assets/css/registro.css";
 import "../../assets/css/modelo.css";
 
-export default function Registro() {
-  const { register } = useUserAuth();
-  const navigate = useNavigate();
+import { Auth, default as UsuarioService } from "../../services/UsuarioService";
 
+export default function Registro() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
-    nombre: "",
-    apellidos: "",
-    correo: "",
-    password: "",
-    confirmar: "",
-    direccion: "",
-    region: "",
-    comuna: "",
+    nombre: "", apellidos: "", correo: "", password: "", confirmar: "",
+    direccion: "", region: "", comuna: "",
   });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -34,14 +27,24 @@ export default function Registro() {
       return;
     }
     setLoading(true);
-    const { confirmar, ...userData } = form;
-    const res = await register(userData);
-    setLoading(false);
-    if (!res.ok) {
-      setError(res.error?.message || "Error registrando usuario");
-      return;
+
+    try {
+      const { confirmar, ...userData } = form;
+      const res = await Auth.register(userData);
+      setLoading(false);
+
+      if (res?.data?.user) {
+        UsuarioService.setCurrentUser(res.data.user);
+        navigate("/");
+        return;
+      }
+
+      setError(res?.data?.message || "Error registrando usuario");
+    } catch (err) {
+      setLoading(false);
+      setError(err.response?.data?.message || "Error registrando usuario");
+      console.error(err);
     }
-    navigate("/");
   };
 
   return (
@@ -51,7 +54,6 @@ export default function Registro() {
         <div className="form-container">
           <h2>Registro de Usuario</h2>
           {error && <div className="alert alert-danger">{error}</div>}
-
           <form onSubmit={handleSubmit}>
             <label>Nombre</label>
             <input type="text" name="nombre" value={form.nombre} onChange={handleChange} required />

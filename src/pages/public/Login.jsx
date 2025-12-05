@@ -1,14 +1,14 @@
 // src/pages/public/Login.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useUserAuth from "../../hooks/useUserAuth";
 import Header from "../../components/organisms/Header";
 import Footer from "../../components/organisms/Footer";
 import "../../assets/css/login.css";
 import "../../assets/css/modelo.css";
 
+import { Auth, default as UsuarioService } from "../../services/UsuarioService";
+
 export default function Login() {
-  const { login } = useUserAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ correo: "", password: "" });
   const [error, setError] = useState(null);
@@ -20,13 +20,23 @@ export default function Login() {
     e.preventDefault();
     setError(null);
     setLoading(true);
-    const res = await login(form.correo, form.password);
-    setLoading(false);
-    if (!res.ok) {
-      setError(res.error?.message || "Credenciales inválidas");
-      return;
+
+    try {
+      const res = await Auth.login(form.correo, form.password);
+      setLoading(false);
+
+      if (res?.data?.user) {
+        UsuarioService.setCurrentUser(res.data.user);
+        navigate("/");
+        return;
+      }
+
+      setError(res?.data?.message || "Credenciales inválidas");
+    } catch (err) {
+      setLoading(false);
+      setError(err.response?.data?.message || "Error en login");
+      console.error(err);
     }
-    navigate("/");
   };
 
   return (

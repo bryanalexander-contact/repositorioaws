@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// 🌐 Públicas
+// Public
 import Home from "./pages/public/Home";
 import Productos from "./pages/public/Productos";
 import DetalleProducto from "./pages/public/DetalleProducto";
@@ -17,7 +17,7 @@ import CompraFallida from "./pages/public/CompraFallida";
 import CategoriasPublic from "./pages/public/Categorias";
 import Ofertas from "./pages/public/Ofertas";
 
-// ⚙️ Admin
+// Admin pages
 import PanelAdmin from "./pages/admin/PanelAdmin";
 import PanelProductos from "./pages/admin/PanelProductos";
 import PanelUsuarios from "./pages/admin/PanelUsuarios";
@@ -36,14 +36,17 @@ import ProductosCriticos from "./pages/admin/ProductosCriticos";
 import HistorialCompras from "./pages/admin/HistorialCompras";
 import ReporteProductos from "./pages/admin/ReporteProductos";
 
-// 🆕 Componentes nuevos CRUD
+// CRUD nuevos
 import ListaProductos from "./components/ListaProductos";
 import ProductoComponent from "./components/ProductoComponent";
 
-// 🧠 Contextos
+// Contextos
 import { CartProvider } from "./context/CartContext";
 import { ProductsProvider } from "./context/ProductsContext";
 import { UsersProvider } from "./context/UsersContext";
+
+// Route protection
+import RequireRole from "./routes/RequireRole";
 
 export default function App() {
   return (
@@ -53,7 +56,7 @@ export default function App() {
           <CartProvider>
             <Routes>
 
-              {/* 🌐 Rutas públicas */}
+              {/* --- PUBLICAS --- */}
               <Route path="/" element={<Home />} />
               <Route path="/productos" element={<Productos />} />
               <Route path="/detalle/:id" element={<DetalleProducto />} />
@@ -69,38 +72,148 @@ export default function App() {
               <Route path="/categorias" element={<CategoriasPublic />} />
               <Route path="/ofertas" element={<Ofertas />} />
 
-              {/* 🆕 CRUD nuevo con componentes */}
+              {/* CRUD simples */}
               <Route path="/lista-productos" element={<ListaProductos />} />
               <Route path="/add-producto" element={<ProductoComponent />} />
               <Route path="/edit-producto/:id" element={<ProductoComponent />} />
 
-              {/* ⚙️ Panel Admin */}
-              <Route path="/admin" element={<PanelAdmin />} />
-              <Route path="/admin/perfil" element={<Perfil />} />
-              <Route path="/admin/boletas" element={<Boletas />} />
-              <Route path="/admin/categorias" element={<CategoriasAdmin />} />
-              <Route path="/admin/panelproductos" element={<PanelProductos />} />
-              <Route path="/admin/panelusuarios" element={<PanelUsuarios />} />
-              <Route path="/admin/reportes" element={<Reportes />} />
-              <Route path="/admin/productoscriticos" element={<ProductosCriticos />} />
+              {/* --------------- ADMIN + VENDEDOR --------------- */}
+              <Route
+                path="/admin/boletas"
+                element={
+                  <RequireRole roles={["admin", "vendedor"]}>
+                    <Boletas />
+                  </RequireRole>
+                }
+              />
 
-              {/* 🧩 Admin Productos */}
-              <Route path="/admin/mostrarproductos" element={<MostrarProductos />} />
-              <Route path="/admin/nuevoproducto" element={<NuevoProducto />} />
-              <Route path="/admin/editar-producto/:id" element={<EditarProducto />} />
-              <Route path="/admin/reporte-productos" element={<ReporteProductos />} />
+              <Route
+                path="/detalle-boleta/:id"
+                element={
+                  <RequireRole roles={["admin", "vendedor"]}>
+                    <DetalleBoleta />
+                  </RequireRole>
+                }
+              />
 
-              {/* 🧩 Admin Usuarios */}
-              <Route path="/admin/mostrarusuarios" element={<MostrarUsuarios />} />
-              <Route path="/admin/nuevousuario" element={<NuevoUsuario />} />
-              <Route path="/admin/editar-usuario/:id" element={<EditarUsuario />} />
+              <Route
+                path="/admin/mostrarproductos"
+                element={
+                  <RequireRole roles={["admin", "vendedor"]}>
+                    <MostrarProductos />
+                  </RequireRole>
+                }
+              />
 
-              {/* 🧾 Historial de compras */}
-              <Route path="/admin/historial-compras/:id" element={<HistorialCompras />} />
+              {/* --------------- SOLO ADMIN --------------- */}
 
-              {/* 🧾 Detalle boleta */}
-              <Route path="/detalle-boleta/:id" element={<DetalleBoleta />} />
+              <Route
+                path="/admin"
+                element={
+                  <RequireRole roles={["admin"]}>
+                    <PanelAdmin />
+                  </RequireRole>
+                }
+              />
 
+              <Route
+                path="/admin/panelproductos"
+                element={
+                  <RequireRole roles={["admin"]}>
+                    <PanelProductos />
+                  </RequireRole>
+                }
+              />
+
+              <Route
+                path="/admin/panelusuarios"
+                element={
+                  <RequireRole roles={["admin"]}>
+                    <PanelUsuarios />
+                  </RequireRole>
+                }
+              />
+
+              <Route
+                path="/admin/nuevoproducto"
+                element={
+                  <RequireRole roles={["admin"]}>
+                    <NuevoProducto />
+                  </RequireRole>
+                }
+              />
+
+              <Route
+                path="/admin/nuevousuario"
+                element={
+                  <RequireRole roles={["admin"]}>
+                    <NuevoUsuario />
+                  </RequireRole>
+                }
+              />
+
+              <Route
+                path="/admin/categorias"
+                element={
+                  <RequireRole roles={["admin"]}>
+                    <CategoriasAdmin />
+                  </RequireRole>
+                }
+              />
+
+              <Route
+                path="/admin/editar-producto/:id"
+                element={
+                  <RequireRole roles={["admin"]}>
+                    <EditarProducto />
+                  </RequireRole>
+                }
+              />
+
+              <Route
+                path="/admin/editar-usuario/:id"
+                element={
+                  <RequireRole roles={["admin"]}>
+                    <EditarUsuario />
+                  </RequireRole>
+                }
+              />
+
+              <Route
+                path="/admin/reportes"
+                element={
+                  <RequireRole roles={["admin"]}>
+                    <Reportes />
+                  </RequireRole>
+                }
+              />
+
+              <Route
+                path="/admin/productoscriticos"
+                element={
+                  <RequireRole roles={["admin"]}>
+                    <ProductosCriticos />
+                  </RequireRole>
+                }
+              />
+
+              <Route
+                path="/admin/reporte-productos"
+                element={
+                  <RequireRole roles={["admin"]}>
+                    <ReporteProductos />
+                  </RequireRole>
+                }
+              />
+
+              <Route
+                path="/admin/historial-compras/:id"
+                element={
+                  <RequireRole roles={["admin"]}>
+                    <HistorialCompras />
+                  </RequireRole>
+                }
+              />
             </Routes>
           </CartProvider>
         </ProductsProvider>
