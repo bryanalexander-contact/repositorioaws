@@ -1,7 +1,7 @@
 import api from './AxiosConfig';
 
-const BASE_BOLETAS = 'http://54.234.15.47:4006/boletas';
-const BASE_DETALLE = 'http://54.234.15.47:4004/detalle';
+const BASE_BOLETAS = 'http://54.234.98.114:4006/boletas';
+const BASE_DETALLE = 'http://54.234.98.114:4004/detalle';
 
 class BoletaService {
 

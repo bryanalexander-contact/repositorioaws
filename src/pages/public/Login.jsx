@@ -1,28 +1,32 @@
+// src/pages/public/Login.jsx
 import React, { useState } from "react";
-import { useUsers } from "../../context/UsersContext";
 import { useNavigate } from "react-router-dom";
+import useUserAuth from "../../hooks/useUserAuth";
 import Header from "../../components/organisms/Header";
 import Footer from "../../components/organisms/Footer";
 import "../../assets/css/login.css";
 import "../../assets/css/modelo.css";
 
 export default function Login() {
-  const { login } = useUsers();
+  const { login } = useUserAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ correo: "", password: "" });
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
-    const r = login(form.correo, form.password);
-    if (!r.ok) {
-      setError(r.message);
+    setLoading(true);
+    const res = await login(form.correo, form.password);
+    setLoading(false);
+    if (!res.ok) {
+      setError(res.error?.message || "Credenciales inválidas");
       return;
     }
-    navigate("/"); // login ok
+    navigate("/");
   };
 
   return (
@@ -38,7 +42,7 @@ export default function Login() {
             <input type="email" name="correo" value={form.correo} onChange={handleChange} required />
             <label>Contraseña</label>
             <input type="password" name="password" value={form.password} onChange={handleChange} required />
-            <button type="submit">Iniciar sesión</button>
+            <button type="submit" disabled={loading}>{loading ? "Ingresando..." : "Iniciar sesión"}</button>
           </form>
         </div>
       </main>

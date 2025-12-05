@@ -1,7 +1,7 @@
 // src/services/UsuarioService.js
 import api from './AxiosConfig';
 
-const BASE = 'http://54.234.15.47:4002/usuarios';
+const BASE = 'http://54.234.98.114:4002/usuarios';
 
 class AuthService {
   register(user) {

@@ -1,18 +1,37 @@
 // src/pages/admin/HistorialCompras.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { useUsers } from "../../context/UsersContext";
+import UsuarioService from "../../services/UsuarioService";
 import "../../assets/css/admin/mostrar-usuarios.css";
 
 function HistorialCompras() {
   const { id } = useParams();
-  const { usuarios } = useUsers();
+  const [historial, setHistorial] = useState([]);
+  const [usuario, setUsuario] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const usuario = usuarios.find(u => u.id === parseInt(id));
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const [uRes, hRes] = await Promise.all([
+          UsuarioService.getById(id),
+          UsuarioService.getCompras(id),
+        ]);
+        if (!mounted) return;
+        setUsuario(uRes.data);
+        setHistorial(hRes.data || []);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+    return () => (mounted = false);
+  }, [id]);
 
-  if (!usuario) return <p style={{ padding: "20px" }}>Usuario no encontrado.</p>;
-
-  const historial = usuario.historialCompras || [];
+  if (loading) return <p style={{ padding: 20 }}>Cargando historial...</p>;
+  if (!usuario) return <p style={{ padding: 20 }}>Usuario no encontrado.</p>;
 
   return (
     <div className="admin-container">
@@ -39,13 +58,13 @@ function HistorialCompras() {
             </thead>
             <tbody>
               {historial.map(c => (
-                <tr key={c.numeroCompra}>
+                <tr key={c.numeroCompra || JSON.stringify(c)}>
                   <td>{c.numeroCompra}</td>
                   <td>{new Date(c.fecha).toLocaleString()}</td>
-                  <td>${c.total}</td>
+                  <td>${c.total?.toLocaleString?.() ?? c.total}</td>
                   <td>
-                    {c.productos.map(p => (
-                      <div key={p.id}>
+                    {c.productos?.map(p => (
+                      <div key={p.id || `${p.nombre}-${Math.random()}`}>
                         {p.nombre} x{p.cantidad} (${p.precio})
                       </div>
                     ))}
