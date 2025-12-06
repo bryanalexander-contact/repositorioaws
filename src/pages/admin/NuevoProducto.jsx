@@ -54,8 +54,9 @@ function NuevoProducto() {
       fd.append("stock_critico", form.stock_critico ?? 0);
       fd.append("en_oferta", form.en_oferta ? "true" : "false");
 
-      if (form.imagenFile) fd.append("imagen", form.imagenFile);
-      else if (form.imagenURL) fd.append("imagen", form.imagenURL);
+      // Imagen: archivo o URL
+      if (form.imagenFile) fd.append("imagen", form.imagenFile); // archivo → multer
+      else if (form.imagenURL) fd.append("imagen", form.imagenURL); // URL → multer/backend acepta
 
       await ProductService.create(fd);
       alert("Producto agregado correctamente!");

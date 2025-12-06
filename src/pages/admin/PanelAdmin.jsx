@@ -7,14 +7,14 @@ export default function PanelAdmin() {
   const navigate = useNavigate();
 
   const tarjetas = [
-    { titulo: "Boletas", ruta: "/admin/Boletas", icono: "🧾" },
-    { titulo: "Categorías", ruta: "/admin/Categorias", icono: "📦" },
-    { titulo: "Usuarios", ruta: "/admin/PanelUsuarios", icono: "👥" },
-    { titulo: "Reportes", ruta: "/admin/Reportes", icono: "📊" },
-    { titulo: "Perfil", ruta: "/admin/Perfil", icono: "⚙️" },
-    { titulo: "Productos", ruta: "/admin/PanelProductos", icono: "🛒" },
-    { titulo: "Nuevo Producto", ruta: "/admin/NuevoProducto", icono: "➕" },
-    { titulo: "Ver Productos", ruta: "/admin/MostrarProductos", icono: "📋" },
+    { titulo: "Boletas", ruta: "/admin/boletas", icono: "🧾" },
+    { titulo: "Categorías", ruta: "/admin/categorias", icono: "📦" },
+    { titulo: "Usuarios", ruta: "/admin/panelusuarios", icono: "👥" },
+    { titulo: "Reportes", ruta: "/admin/reportes", icono: "📊" },
+    { titulo: "Perfil", ruta: "/admin/perfil", icono: "⚙️" },
+    { titulo: "Productos", ruta: "/admin/panelproductos", icono: "🛒" },
+    { titulo: "Nuevo Producto", ruta: "/admin/nuevoproducto", icono: "➕" },
+    { titulo: "Ver Productos", ruta: "/admin/mostrarproductos", icono: "📋" },
   ];
 
   return (

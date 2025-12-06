@@ -1,16 +1,31 @@
-// src/pages/public/Home.jsx
-import React, { useContext } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/organisms/Header";
 import Footer from "../../components/organisms/Footer";
 import heroImg from "../../assets/img/tienda-online.jpeg";
 import "../../assets/css/index.css";
 import "../../assets/css/modelo.css";
 import "../../assets/css/hero.css";
-import { ProductsContext } from "../../context/ProductsContext";
 import ProductCard from "../../components/molecules/ProductCard";
+import ProductService from "../../services/ProductService";
 
 function Home() {
-  const { productos } = useContext(ProductsContext);
+  const [productos, setProductos] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    ProductService.getAll()
+      .then((res) => {
+        // suponer res.data = array de productos
+        setProductos(res.data || []);
+      })
+      .catch((err) => {
+        console.error("Error cargando productos:", err);
+        setProductos([]);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
   const destacados = productos.slice(0, 4);
 
   return (
@@ -33,8 +48,14 @@ function Home() {
       <section className="productos">
         <h2>Productos destacados</h2>
         <div id="productos-home" className="grid-productos row">
-          {destacados.length > 0 ? (
-            destacados.map((p) => <div className="col-md-3" key={p.id}><ProductCard producto={p} /></div>)
+          {loading ? (
+            <p>Cargando productos...</p>
+          ) : destacados.length > 0 ? (
+            destacados.map((p) => (
+              <div className="col-md-3" key={p.id}>
+                <ProductCard producto={p} />
+              </div>
+            ))
           ) : (
             <p>No hay productos disponibles.</p>
           )}

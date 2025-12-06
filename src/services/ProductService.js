@@ -1,7 +1,7 @@
 // src/services/ProductService.js
 import api from './AxiosConfig';
 
-const API_URL = 'http://3.80.84.147:4003'; // o la IP que uses
+const API_URL = 'http://54.167.28.38:4003'; // o la IP que uses
 
 class ProductService {
   getAll() {

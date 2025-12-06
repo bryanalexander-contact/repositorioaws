@@ -1,7 +1,7 @@
 import api from "./AxiosConfig";
 import { setToken } from "./AuthToken";
 
-const BASE = "http://3.80.84.147:4002/usuarios";
+const BASE = "http://54.167.28.38:4002/usuarios";
 
 class UsuarioServiceClass {
   constructor() {

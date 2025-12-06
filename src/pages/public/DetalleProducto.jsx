@@ -1,44 +1,66 @@
+// src/pages/public/DetalleProducto.jsx
 import React, { useState, useEffect } from "react";
-import { useProducts } from "../../context/ProductsContext";
 import { useCart } from "../../context/CartContext";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "../../components/organisms/Header";
 import Footer from "../../components/organisms/Footer";
 import ProductCard from "../../components/molecules/ProductCard";
+import ProductService from "../../services/ProductService";
 import "../../assets/css/detalle-producto.css";
 
 export default function DetalleProducto() {
-  const { productos } = useProducts();
   const { addToCart } = useCart();
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [producto, setProducto] = useState(null);
+  const [relacionados, setRelacionados] = useState([]);
   const [cantidad, setCantidad] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (productos.length > 0) {
-      const prod = productos.find((p) => p.id === parseInt(id));
-      if (prod) {
+    const fetchProducto = async () => {
+      try {
+        setLoading(true);
+        const res = await ProductService.getById(id);
+        const prod = res.data;
+
+        if (!prod) {
+          navigate("/productos"); // redirigir si no existe
+          return;
+        }
+
         setProducto({
           ...prod,
           precio: Number(prod.precio) || 0,
-          precioOferta: prod.precioOferta ? Number(prod.precioOferta) : null,
+          precioOferta: prod.precio_oferta ? Number(prod.precio_oferta) : null,
         });
+
+        // Cargar productos relacionados
+        const catRes = await ProductService.getByCategory(prod.categoria);
+        const relacionadosFiltrados = catRes.data
+          .filter((p) => p.id !== prod.id)
+          .slice(0, 8)
+          .map((p) => ({
+            ...p,
+            precio: Number(p.precio) || 0,
+            precioOferta: p.precio_oferta ? Number(p.precio_oferta) : null,
+          }));
+
+        setRelacionados(relacionadosFiltrados);
+      } catch (error) {
+        console.error("Error cargando producto:", error);
+        navigate("/productos");
+      } finally {
+        setLoading(false);
       }
-    }
-  }, [productos, id]);
+    };
 
+    fetchProducto();
+  }, [id, navigate]);
+
+  if (loading) return <p className="p-4">Cargando producto...</p>;
   if (!producto) return <p className="p-4">Producto no encontrado.</p>;
-
-  const relacionados = productos
-    .filter((p) => p.categoria === producto.categoria && p.id !== producto.id)
-    .slice(0, 8)
-    .map((p) => ({
-      ...p,
-      precio: Number(p.precio) || 0,
-      precioOferta: p.precioOferta ? Number(p.precioOferta) : null,
-    }));
 
   return (
     <>
@@ -47,7 +69,7 @@ export default function DetalleProducto() {
       <div className="detalle-producto">
         <div className="detalle-producto-contenido">
           <img
-            src={producto.imagen || "/img/placeholder.png"}
+            src={producto.imagen_url || "/img/placeholder.png"}
             alt={producto.nombre}
           />
 
@@ -83,6 +105,7 @@ export default function DetalleProducto() {
             <button
               className="btn-agregar"
               onClick={() => addToCart(producto, cantidad)}
+              disabled={producto.stock === 0}
             >
               🛒 Añadir al carrito
             </button>
