@@ -2,13 +2,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import UsuarioService from "../../services/UsuarioService";
-import useUserAuth from "../../hooks/useUserAuth";
 import "../../assets/css/admin/editar-usuario.css";
 
 function EditarUsuario() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user: currentUser, updateUser } = useUserAuth();
   const [usuario, setUsuario] = useState(null);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({
@@ -35,7 +33,9 @@ function EditarUsuario() {
           nombre: res.data.nombre || "",
           apellidos: res.data.apellidos || "",
           correo: res.data.correo || "",
-          fechaNacimiento: res.data.fecha_nacimiento ? res.data.fecha_nacimiento.split("T")[0] : "",
+          fechaNacimiento: res.data.fecha_nacimiento
+            ? res.data.fecha_nacimiento.split("T")[0]
+            : "",
           tipoUsuario: res.data.tipo_usuario || "cliente",
           region: res.data.region || "",
           comuna: res.data.comuna || "",
@@ -43,7 +43,7 @@ function EditarUsuario() {
         });
       } catch (err) {
         console.error("Error cargando usuario:", err);
-        navigate("/admin/MostrarUsuarios");
+        navigate("/admin/mostrarusuarios");
       } finally {
         if (mounted) setLoading(false);
       }
@@ -69,12 +69,17 @@ function EditarUsuario() {
       comuna: form.comuna,
       direccion: form.direccion,
     };
-    const res = await updateUser(id, payload);
-    if (res.ok) {
-      alert("Usuario actualizado correctamente!");
-      navigate("/admin/MostrarUsuarios");
-    } else {
-      alert("Error al actualizar: " + JSON.stringify(res.error));
+    try {
+      const res = await UsuarioService.update(id, payload);
+      if (res?.data?.ok || res?.status === 200) {
+        alert("Usuario actualizado correctamente!");
+        navigate("/admin/mostrarusuarios");
+      } else {
+        alert("Error al actualizar: " + JSON.stringify(res?.data || res));
+      }
+    } catch (err) {
+      console.error("Error actualizando:", err);
+      alert("Error al actualizar usuario");
     }
   };
 
@@ -84,7 +89,7 @@ function EditarUsuario() {
       <div className="admin-container">
         <main className="admin-main">
           <h2>Usuario no encontrado 😕</h2>
-          <Link to="/admin/MostrarUsuarios">Volver</Link>
+          <Link to="/admin/mostrarusuarios">Volver</Link>
         </main>
       </div>
     );
@@ -94,8 +99,12 @@ function EditarUsuario() {
       <aside className="sidebar">
         <h2>Panel Usuarios</h2>
         <ul>
-          <li><Link to="/admin/MostrarUsuarios">Mostrar Usuarios</Link></li>
-          <li><Link to="/admin/NuevoUsuario">Nuevo Usuario</Link></li>
+          <li>
+            <Link to="/admin/mostrarusuarios">Mostrar Usuarios</Link>
+          </li>
+          <li>
+            <Link to="/admin/nuevousuario">Nuevo Usuario</Link>
+          </li>
         </ul>
       </aside>
 

@@ -43,8 +43,14 @@ function MostrarUsuarios() {
       <aside className="sidebar">
         <h2>Panel Usuarios</h2>
         <ul>
-          <li><Link to="/admin/mostrarusuarios" className="active">Mostrar Usuarios</Link></li>
-          <li><Link to="/admin/nuevousuario">Nuevo Usuario</Link></li>
+          <li>
+            <Link to="/admin/mostrarusuarios" className="active">
+              Mostrar Usuarios
+            </Link>
+          </li>
+          <li>
+            <Link to="/admin/nuevousuario">Nuevo Usuario</Link>
+          </li>
         </ul>
       </aside>
 
@@ -66,20 +72,32 @@ function MostrarUsuarios() {
             {usuarios.map((u) => (
               <tr key={u.id}>
                 <td>{u.run}</td>
-                <td>{u.nombre} {u.apellidos}</td>
+                <td>
+                  {u.nombre} {u.apellidos}
+                </td>
                 <td>{u.correo}</td>
                 <td>{u.tipo_usuario || u.tipoUsuario}</td>
-                <td>{u.region} / {u.comuna}</td>
+                <td>
+                  {u.region} / {u.comuna}
+                </td>
                 <td>{u.direccion}</td>
                 <td>
-                  <Link to={`/admin/editar-usuario/${u.id}`}><button>Editar</button></Link>
+                  <Link to={`/admin/editar-usuario/${u.id}`}>
+                    <button>Editar</button>
+                  </Link>
                   <button onClick={() => eliminarUsuario(u.id)}>Eliminar</button>
-                  <Link to={`/admin/historial-compras/${u.id}`}><button>Ver Historial</button></Link>
+                  <Link to={`/admin/historial-compras/${u.id}`}>
+                    <button>Ver Historial</button>
+                  </Link>
                 </td>
               </tr>
             ))}
             {usuarios.length === 0 && (
-              <tr><td colSpan={7} style={{ textAlign: "center" }}>No hay usuarios.</td></tr>
+              <tr>
+                <td colSpan={7} style={{ textAlign: "center" }}>
+                  No hay usuarios.
+                </td>
+              </tr>
             )}
           </tbody>
         </table>

@@ -16,7 +16,7 @@ function NuevoUsuario() {
     region: "",
     comuna: "",
     direccion: "",
-    password: "123456", // si quieres pedir password en formulario, añade campo
+    password: "123456",
   });
   const [loading, setLoading] = useState(false);
 
@@ -25,28 +25,32 @@ function NuevoUsuario() {
     setForm((p) => ({ ...p, [name]: value }));
   };
 
+  const normalize = (v) => (v === "" ? null : v);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       const payload = {
-        run: form.run,
-        nombre: form.nombre,
-        apellidos: form.apellidos,
-        correo: form.correo,
-        password: form.password,
-        fechaNacimiento: form.fechaNacimiento,
-        tipoUsuario: form.tipoUsuario,
-        direccion: form.direccion,
-        region: form.region,
-        comuna: form.comuna,
+        run: normalize(form.run),
+        nombre: normalize(form.nombre),
+        apellidos: normalize(form.apellidos),
+        correo: normalize(form.correo),
+        password: normalize(form.password),
+        fechaNacimiento: normalize(form.fechaNacimiento),
+        tipoUsuario: form.tipoUsuario, // ahora usamos tipoUsuario
+        direccion: normalize(form.direccion),
+        region: normalize(form.region),
+        comuna: normalize(form.comuna),
+        departamento: null,
+        indicacion: null,
       };
       await Auth.register(payload);
       alert("Usuario agregado correctamente!");
-      navigate("/admin/MostrarUsuarios");
+      navigate("/admin/mostrarusuarios");
     } catch (err) {
       console.error(err);
-      alert("Error creando usuario");
+      alert(err.response?.data?.message || err.message || "Error creando usuario");
     } finally {
       setLoading(false);
     }
@@ -57,9 +61,9 @@ function NuevoUsuario() {
       <aside className="sidebar">
         <h2>Panel Usuarios</h2>
         <ul>
-          <li><Link to="/admin/MostrarUsuarios">Mostrar Usuarios</Link></li>
-          <li><Link to="/admin/NuevoUsuario" className="active">Nuevo Usuario</Link></li>
-          <li><Link to="/admin/EditarUsuario">Editar Usuarios</Link></li>
+          <li><Link to="/admin/mostrarusuarios">Mostrar Usuarios</Link></li>
+          <li><Link to="/admin/nuevousuario" className="active">Nuevo Usuario</Link></li>
+          <li><Link to="/admin/editar-usuario">Editar Usuarios</Link></li>
         </ul>
       </aside>
 

@@ -11,13 +11,21 @@ import { Auth, default as UsuarioService } from "../../services/UsuarioService";
 export default function Registro() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
-    nombre: "", apellidos: "", correo: "", password: "", confirmar: "",
-    direccion: "", region: "", comuna: "",
+    nombre: "",
+    apellidos: "",
+    correo: "",
+    password: "",
+    confirmar: "",
+    direccion: "",
+    region: "",
+    comuna: "",
   });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const normalize = (v) => (v === "" ? null : v);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,7 +38,25 @@ export default function Registro() {
 
     try {
       const { confirmar, ...userData } = form;
-      const res = await Auth.register(userData);
+
+      // Enviar payload normalizado (evita enviar "" al backend)
+      const payload = {
+        nombre: normalize(userData.nombre),
+        apellidos: normalize(userData.apellidos),
+        correo: normalize(userData.correo),
+        password: normalize(userData.password),
+        direccion: normalize(userData.direccion),
+        region: normalize(userData.region),
+        comuna: normalize(userData.comuna),
+        // campos que API espera (pueden ser null)
+        run: null,
+        fechaNacimiento: null,
+        tipoUsuario: "cliente", // explicitamos que los registros públicos son "cliente"
+        departamento: null,
+        indicacion: null,
+      };
+
+      const res = await Auth.register(payload);
       setLoading(false);
 
       if (res?.data?.user) {
@@ -42,7 +68,7 @@ export default function Registro() {
       setError(res?.data?.message || "Error registrando usuario");
     } catch (err) {
       setLoading(false);
-      setError(err.response?.data?.message || "Error registrando usuario");
+      setError(err.response?.data?.message || err.message || "Error registrando usuario");
       console.error(err);
     }
   };

@@ -55,7 +55,6 @@ export default function App() {
         <ProductsProvider>
           <CartProvider>
             <Routes>
-
               {/* --- PUBLICAS --- */}
               <Route path="/" element={<Home />} />
               <Route path="/productos" element={<Productos />} />
@@ -78,6 +77,15 @@ export default function App() {
               <Route path="/edit-producto/:id" element={<ProductoComponent />} />
 
               {/* --------------- ADMIN + VENDEDOR --------------- */}
+              <Route
+                path="/admin"
+                element={
+                  <RequireRole roles={["admin", "vendedor"]}>
+                    <PanelAdmin />
+                  </RequireRole>
+                }
+              />
+
               <Route
                 path="/admin/boletas"
                 element={
@@ -106,16 +114,6 @@ export default function App() {
               />
 
               {/* --------------- SOLO ADMIN --------------- */}
-
-              <Route
-                path="/admin"
-                element={
-                  <RequireRole roles={["admin"]}>
-                    <PanelAdmin />
-                  </RequireRole>
-                }
-              />
-
               <Route
                 path="/admin/panelproductos"
                 element={

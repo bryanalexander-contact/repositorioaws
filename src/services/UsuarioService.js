@@ -1,34 +1,58 @@
-// src/services/UsuarioService.js
-import api from './AxiosConfig';
+import api from "./AxiosConfig";
+import { setToken } from "./AuthToken";
 
-const BASE = 'http://54.234.98.114:4002/usuarios';
+const BASE = "http://3.80.84.147:4002/usuarios";
 
-class AuthService {
-  register(user) {
-    return api.post(`${BASE}/register`, user);
+class UsuarioServiceClass {
+  constructor() {
+    // Recuperar usuario desde localStorage si existe
+    const savedUser = localStorage.getItem("currentUser");
+    this.currentUser = savedUser ? JSON.parse(savedUser) : null;
   }
 
-  // login guarda token y user (user devuelto por API)
-  async login(correo, password) {
-    const res = await api.post(`${BASE}/login`, { correo, password });
-    if (res.data?.token) {
-      localStorage.setItem('token', res.data.token);
+  /**
+   * Guarda el usuario actual en memoria y localStorage
+   * @param {Object|null} user 
+   */
+  setCurrentUser(user) {
+    this.currentUser = user || null;
+
+    if (user) {
+      localStorage.setItem("currentUser", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("currentUser");
     }
-    if (res.data?.user) {
-      // Guardar user completo (compatibilidad)
-      localStorage.setItem('userLogueado', JSON.stringify(res.data.user));
+
+    // Dispara evento global para sincronizar Header y otros componentes
+    try {
+      window.dispatchEvent(
+        new CustomEvent("userChanged", { detail: this.currentUser })
+      );
+    } catch (e) {
+      console.warn("userChanged event error:", e);
     }
-    return res;
   }
 
-  logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userLogueado');
+  /**
+   * Obtiene el usuario actual desde memoria o localStorage
+   * @returns {Object|null}
+   */
+  getCurrentUser() {
+    if (!this.currentUser) {
+      const saved = localStorage.getItem("currentUser");
+      if (saved) this.currentUser = JSON.parse(saved);
+    }
+    return this.currentUser;
   }
-}
 
-class UsuarioService {
-  // requiere token (AxiosConfig ya envía Authorization)
+  /**
+   * Borra el usuario actual
+   */
+  clearCurrentUser() {
+    this.setCurrentUser(null);
+  }
+
+  // =================== MÉTODOS API ===================
   getAll() {
     return api.get(`${BASE}`);
   }
@@ -45,9 +69,7 @@ class UsuarioService {
     return api.delete(`${BASE}/${id}`);
   }
 
-  // HISTORIAL
   addCompra(userId, compra) {
-    // compra: { numeroCompra, fecha, total, comprador, productos }
     return api.post(`${BASE}/${userId}/compras`, compra);
   }
 
@@ -60,5 +82,59 @@ class UsuarioService {
   }
 }
 
-export const Auth = new AuthService();
-export default new UsuarioService();
+const UsuarioService = new UsuarioServiceClass();
+
+class AuthService {
+  constructor(usuarioService) {
+    this.UsuarioService = usuarioService;
+  }
+
+  /**
+   * Registro de usuario
+   */
+  register(user) {
+    const payload = {
+      run: user.run || "",
+      nombre: user.nombre || "",
+      apellidos: user.apellidos || "",
+      correo: user.correo || "",
+      password: user.password || "",
+      fechaNacimiento: user.fechaNacimiento || "",
+      tipoUsuario: user.tipoUsuario || "cliente",
+      direccion: user.direccion || "",
+      region: user.region || "",
+      comuna: user.comuna || "",
+      departamento: user.departamento || "",
+      indicacion: user.indicacion || "",
+    };
+    return api.post(`${BASE}/register`, payload);
+  }
+
+  /**
+   * Login mediante API
+   * Guarda token y usuario en localStorage
+   */
+  async login(correo, password) {
+    const res = await api.post(`${BASE}/login`, { correo, password });
+    const token = res?.data?.token;
+    const user = res?.data?.user || null;
+
+    if (token) setToken(token);
+
+    if (!user) throw new Error("Usuario no encontrado");
+
+    this.UsuarioService.setCurrentUser(user); // Memoria + localStorage
+    return res;
+  }
+
+  /**
+   * Logout: borra token y usuario
+   */
+  logout() {
+    setToken(null);
+    this.UsuarioService.clearCurrentUser();
+  }
+}
+
+export const Auth = new AuthService(UsuarioService);
+export default UsuarioService;
