@@ -1,4 +1,3 @@
-// src/components/molecules/ProductCard.jsx
 import { Link } from "react-router-dom";
 import Button from "../atoms/Button";
 import Badge from "../atoms/Badge";
@@ -9,9 +8,22 @@ import { useState } from "react";
 
 export default function ProductCard({ producto }) {
   const { addToCart } = useCart();
-  const { nombre, precio, precioOferta, imagen, categoria, id, stock = 0 } = producto;
+  const {
+    id,
+    nombre,
+    precio = 0,
+    precio_oferta,
+    imagen_url,
+    categoria,
+    stock = 0,
+  } = producto;
+
   const [mensaje, setMensaje] = useState("");
-  const isOffer = precioOferta && precioOferta < precio;
+
+  const isOffer =
+    precio_oferta !== null &&
+    precio_oferta !== undefined &&
+    Number(precio_oferta) < Number(precio);
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
@@ -32,19 +44,37 @@ export default function ProductCard({ producto }) {
           </div>
         )}
 
-        <Link to={`/detalle/${id}`} className="d-block text-decoration-none text-dark p-3">
-          <img src={imagen || "/img/placeholder.png"} alt={nombre} />
+        <Link
+          to={`/detalle/${id}`}
+          className="d-block text-decoration-none text-dark p-3"
+        >
+          <img
+            src={imagen_url || "/img/placeholder.png"}
+            alt={nombre}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/img/placeholder.png";
+            }}
+          />
+
           <h3 className="mt-2">{nombre}</h3>
           <p className="categoria">{categoria}</p>
           <p className="text-muted mb-1">Stock disponible: {stock}</p>
+
           <div className="mt-2">
             {isOffer ? (
               <>
-                <span className="precio-original">${precio.toLocaleString()}</span>
-                <span className="precio-oferta">${precioOferta.toLocaleString()}</span>
+                <span className="precio-original">
+                  ${Number(precio).toLocaleString()}
+                </span>
+                <span className="precio-oferta">
+                  ${Number(precio_oferta).toLocaleString()}
+                </span>
               </>
             ) : (
-              <span className="precio-normal">${precio.toLocaleString()}</span>
+              <span className="precio-normal">
+                ${Number(precio).toLocaleString()}
+              </span>
             )}
           </div>
         </Link>

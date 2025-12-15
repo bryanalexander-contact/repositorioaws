@@ -1,8 +1,8 @@
 // src/services/BoletaService.js
 import api from "./AxiosConfig";
 
-const BASE_BOLETAS = "http://54.167.28.38:4006/boletas";
-const BASE_DETALLE = "http://54.167.28.38:4004/detalle";
+const BASE_BOLETAS = "http://54.91.93.162:4006/boletas";
+const BASE_DETALLE = "http://54.91.93.162:4004/detalle";
 
 function safeParseJsonIfString(v) {
   if (v === null || v === undefined) return v;

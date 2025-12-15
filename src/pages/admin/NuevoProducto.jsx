@@ -16,27 +16,32 @@ function NuevoProducto() {
     stock: 0,
     stock_critico: 0,
     categoria: "",
-    imagenURL: "", // URL text
-    imagenFile: null, // file
+    imagenURL: "",    // URL de imagen (texto)
+    imagenFile: null, // archivo seleccionado
     en_oferta: false,
   });
 
   useEffect(() => {
     CategoriaService.getAll()
-      .then((r) => setCategorias(r.data.map(c => c.nombre)))
-      .catch(() => setCategorias(["Electrónica","Ropa","Hogar","Gamer"]));
+      .then((r) => setCategorias((r.data || []).map((c) => c.nombre)))
+      .catch(() => setCategorias(["Electrónica", "Ropa", "Hogar", "Gamer"]));
   }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
-    if (type === "file" && files && files[0]) {
-      setForm((p) => ({ ...p, imagenFile: files[0] }));
+
+    if (type === "file") {
+      // el input file se llama "imagen" (ver JSX abajo). guardamos en imagenFile
+      if (files && files[0]) setForm((p) => ({ ...p, imagenFile: files[0] }));
       return;
     }
+
     if (type === "checkbox") {
       setForm((p) => ({ ...p, [name]: checked }));
       return;
     }
+
+    // inputs normales (codigo, nombre, descripcion, precio, etc.)
     setForm((p) => ({ ...p, [name]: value }));
   };
 
@@ -48,15 +53,18 @@ function NuevoProducto() {
       fd.append("nombre", form.nombre || "");
       fd.append("descripcion", form.descripcion || "");
       fd.append("categoria", form.categoria || "");
-      fd.append("precio", form.precio ?? 0);
-      if (form.precio_oferta) fd.append("precio_oferta", form.precio_oferta);
-      fd.append("stock", form.stock ?? 0);
-      fd.append("stock_critico", form.stock_critico ?? 0);
+      fd.append("precio", String(form.precio ?? 0));
+      if (form.precio_oferta !== "") fd.append("precio_oferta", String(form.precio_oferta));
+      fd.append("stock", String(form.stock ?? 0));
+      fd.append("stock_critico", String(form.stock_critico ?? 0));
       fd.append("en_oferta", form.en_oferta ? "true" : "false");
 
-      // Imagen: archivo o URL
-      if (form.imagenFile) fd.append("imagen", form.imagenFile); // archivo → multer
-      else if (form.imagenURL) fd.append("imagen", form.imagenURL); // URL → multer/backend acepta
+      // Imagen: preferir archivo; si no, enviar URL como campo 'imagen'
+      if (form.imagenFile) {
+        fd.append("imagen", form.imagenFile);
+      } else if (form.imagenURL) {
+        fd.append("imagen", form.imagenURL);
+      }
 
       await ProductService.create(fd);
       alert("Producto agregado correctamente!");
@@ -104,14 +112,15 @@ function NuevoProducto() {
           <label>Categoría</label>
           <select name="categoria" value={form.categoria} onChange={handleChange}>
             <option value="">Seleccione categoría</option>
-            {categorias.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+            {categorias.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
           </select>
 
           <label>Imagen (archivo)</label>
-          <input type="file" name="imagenFile" onChange={handleChange} />
+          {/* NOMBRE IMPORTANTE: 'imagen' para que multer lo reciba */}
+          <input type="file" name="imagen" accept="image/*" onChange={handleChange} />
 
           <label>O URL de imagen</label>
-          <input type="text" name="imagenURL" value={form.imagenURL} onChange={handleChange} />
+          <input type="text" name="imagenURL" value={form.imagenURL} onChange={handleChange} placeholder="https://..." />
 
           <label>
             <input type="checkbox" name="en_oferta" checked={!!form.en_oferta} onChange={handleChange} />

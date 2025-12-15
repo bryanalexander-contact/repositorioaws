@@ -23,7 +23,6 @@ const Productos = () => {
       <main className="productos-page">
         <section className="productos-container">
           <h1>Productos</h1>
-
           <div className="productos-grid">
             {productos.length > 0 ? (
               productos.map((p) => (

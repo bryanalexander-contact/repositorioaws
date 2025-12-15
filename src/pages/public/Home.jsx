@@ -16,7 +16,6 @@ function Home() {
     setLoading(true);
     ProductService.getAll()
       .then((res) => {
-        // suponer res.data = array de productos
         setProductos(res.data || []);
       })
       .catch((err) => {

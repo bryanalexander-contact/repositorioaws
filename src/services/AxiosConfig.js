@@ -2,9 +2,8 @@ import axios from "axios";
 import { getToken } from "./AuthToken";
 
 const api = axios.create({
-  headers: {
-    "Content-Type": "application/json",
-  },
+  // NO fijar Content-Type aquí
+  // Axios lo setea solo según el payload (JSON o FormData)
 });
 
 api.interceptors.request.use(
@@ -12,7 +11,7 @@ api.interceptors.request.use(
     const token = getToken();
     if (token) {
       config.headers = config.headers || {};
-      config.headers["Authorization"] = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },

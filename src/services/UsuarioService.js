@@ -1,19 +1,15 @@
+// src/services/UsuarioService.js
 import api from "./AxiosConfig";
 import { setToken } from "./AuthToken";
 
-const BASE = "http://54.167.28.38:4002/usuarios";
+const BASE = process.env.REACT_APP_API_USUARIOS || "http://54.91.93.162:4002/usuarios";
 
 class UsuarioServiceClass {
   constructor() {
-    // Recuperar usuario desde localStorage si existe
     const savedUser = localStorage.getItem("currentUser");
     this.currentUser = savedUser ? JSON.parse(savedUser) : null;
   }
 
-  /**
-   * Guarda el usuario actual en memoria y localStorage
-   * @param {Object|null} user 
-   */
   setCurrentUser(user) {
     this.currentUser = user || null;
 
@@ -23,20 +19,13 @@ class UsuarioServiceClass {
       localStorage.removeItem("currentUser");
     }
 
-    // Dispara evento global para sincronizar Header y otros componentes
     try {
-      window.dispatchEvent(
-        new CustomEvent("userChanged", { detail: this.currentUser })
-      );
+      window.dispatchEvent(new CustomEvent("userChanged", { detail: this.currentUser }));
     } catch (e) {
       console.warn("userChanged event error:", e);
     }
   }
 
-  /**
-   * Obtiene el usuario actual desde memoria o localStorage
-   * @returns {Object|null}
-   */
   getCurrentUser() {
     if (!this.currentUser) {
       const saved = localStorage.getItem("currentUser");
@@ -45,14 +34,11 @@ class UsuarioServiceClass {
     return this.currentUser;
   }
 
-  /**
-   * Borra el usuario actual
-   */
   clearCurrentUser() {
     this.setCurrentUser(null);
   }
 
-  // =================== MÉTODOS API ===================
+  // API methods
   getAll() {
     return api.get(`${BASE}`);
   }
@@ -89,9 +75,6 @@ class AuthService {
     this.UsuarioService = usuarioService;
   }
 
-  /**
-   * Registro de usuario
-   */
   register(user) {
     const payload = {
       run: user.run || "",
@@ -110,28 +93,32 @@ class AuthService {
     return api.post(`${BASE}/register`, payload);
   }
 
-  /**
-   * Login mediante API
-   * Guarda token y usuario en localStorage
-   */
+  // Login: guarda token en memoria (setToken) y user en UsuarioService
   async login(correo, password) {
     const res = await api.post(`${BASE}/login`, { correo, password });
     const token = res?.data?.token;
     const user = res?.data?.user || null;
 
-    if (token) setToken(token);
+    if (token) {
+      setToken(token); // mantiene token en memoria para interceptor
+      try {
+        localStorage.setItem("authToken", token); // opcional: persistir token (si quieres implementar re-hydrate)
+      } catch (e) {
+        // ignore
+      }
+    }
 
     if (!user) throw new Error("Usuario no encontrado");
 
-    this.UsuarioService.setCurrentUser(user); // Memoria + localStorage
+    this.UsuarioService.setCurrentUser(user);
     return res;
   }
 
-  /**
-   * Logout: borra token y usuario
-   */
   logout() {
     setToken(null);
+    try {
+      localStorage.removeItem("authToken");
+    } catch (e) {}
     this.UsuarioService.clearCurrentUser();
   }
 }
