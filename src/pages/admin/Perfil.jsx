@@ -1,10 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import UsuarioService from "../../services/UsuarioService";
 import "../../assets/css/admin/perfil.css";
-import useUserAuth from "../../hooks/useUserAuth";
 
 export default function Perfil() {
-  const { user } = useUserAuth();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // cargar usuario inicial desde UsuarioService (localStorage)
+    setUser(UsuarioService.getCurrentUser());
+
+    // escuchar cambios de sesión (login / logout)
+    const handler = (ev) => {
+      setUser(ev?.detail || UsuarioService.getCurrentUser());
+    };
+
+    window.addEventListener("userChanged", handler);
+    return () => window.removeEventListener("userChanged", handler);
+  }, []);
 
   if (!user) {
     return <div style={{ padding: 20 }}>Debes iniciar sesión</div>;
