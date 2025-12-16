@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "../assets/css/blog2.css";
-import "../assets/css/modelo.css";
+import "../../assets/css/blog1.css";
+import "../../assets/css/modelo.css";
 
 const Blog2 = () => {
   return (

@@ -2,7 +2,7 @@
 import api from "./AxiosConfig";
 
 // Preferir variables de entorno si las tienes, si no usar IP/puertos que compartiste
-const BASE_HOST = process.env.REACT_APP_API_HOST || "http://52.90.132.27";
+const BASE_HOST = process.env.REACT_APP_API_HOST || "http://13.218.87.235";
 const BASE_BOLETAS = process.env.REACT_APP_API_BOLETAS || `${BASE_HOST}:4006/boletas`;
 const BASE_DETALLE = process.env.REACT_APP_API_DETALLE || `${BASE_HOST}:4004/detalle`;
 

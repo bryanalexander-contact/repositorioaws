@@ -2,7 +2,7 @@
 import api from "./AxiosConfig";
 import { setToken } from "./AuthToken";
 
-const BASE = process.env.REACT_APP_API_USUARIOS || "http://52.90.132.27:4002/usuarios";
+const BASE = process.env.REACT_APP_API_USUARIOS || "http://13.218.87.235:4002/usuarios";
 
 class UsuarioServiceClass {
   constructor() {

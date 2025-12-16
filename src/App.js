@@ -17,12 +17,15 @@ import CompraFallida from "./pages/public/CompraFallida";
 import CategoriasPublic from "./pages/public/Categorias";
 import Ofertas from "./pages/public/Ofertas";
 
-// Admin pages
+// 🔥 BLOGS INDIVIDUALES
+import Blog1 from "./pages/public/Blog1";
+import Blog2 from "./pages/public/Blog2";
+
+// Admin
 import PanelAdmin from "./pages/admin/PanelAdmin";
 import PanelProductos from "./pages/admin/PanelProductos";
 import PanelUsuarios from "./pages/admin/PanelUsuarios";
 import MostrarProductos from "./pages/admin/MostrarProductos";
-import MostrarUsuarios from "./pages/admin/MostrarUsuarios";
 import NuevoProducto from "./pages/admin/NuevoProducto";
 import NuevoUsuario from "./pages/admin/NuevoUsuario";
 import EditarProducto from "./pages/admin/EditarProducto";
@@ -35,8 +38,9 @@ import DetalleBoleta from "./pages/admin/DetalleBoleta";
 import ProductosCriticos from "./pages/admin/ProductosCriticos";
 import HistorialCompras from "./pages/admin/HistorialCompras";
 import ReporteProductos from "./pages/admin/ReporteProductos";
+import MostrarUsuarios from "./pages/admin/MostrarUsuarios";
 
-// CRUD nuevos
+// CRUD simples
 import ListaProductos from "./components/ListaProductos";
 import ProductoComponent from "./components/ProductoComponent";
 
@@ -45,7 +49,7 @@ import { CartProvider } from "./context/CartContext";
 import { ProductsProvider } from "./context/ProductsContext";
 import { UsersProvider } from "./context/UsersContext";
 
-// Route protection
+// Protección de rutas
 import RequireRole from "./routes/RequireRole";
 
 export default function App() {
@@ -55,7 +59,8 @@ export default function App() {
         <ProductsProvider>
           <CartProvider>
             <Routes>
-              {/* --- PUBLICAS --- */}
+
+              {/* -------- PUBLICAS -------- */}
               <Route path="/" element={<Home />} />
               <Route path="/productos" element={<Productos />} />
               <Route path="/detalle/:id" element={<DetalleProducto />} />
@@ -65,6 +70,11 @@ export default function App() {
               <Route path="/contacto" element={<Contacto />} />
               <Route path="/carrito" element={<Carrito />} />
               <Route path="/blogs" element={<Blogs />} />
+
+              {/* ✅ BLOGS INDIVIDUALES */}
+              <Route path="/blog1" element={<Blog1 />} />
+              <Route path="/blog2" element={<Blog2 />} />
+
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/compraexitosa" element={<CompraExitosa />} />
               <Route path="/comprafallida" element={<CompraFallida />} />
@@ -76,7 +86,7 @@ export default function App() {
               <Route path="/add-producto" element={<ProductoComponent />} />
               <Route path="/edit-producto/:id" element={<ProductoComponent />} />
 
-              {/* --------------- ADMIN + VENDEDOR --------------- */}
+              {/* -------- ADMIN / VENDEDOR -------- */}
               <Route
                 path="/admin"
                 element={
@@ -113,7 +123,7 @@ export default function App() {
                 }
               />
 
-              {/* --------------- SOLO ADMIN --------------- */}
+              {/* -------- SOLO ADMIN -------- */}
               <Route
                 path="/admin/panelproductos"
                 element={
@@ -137,6 +147,15 @@ export default function App() {
                 element={
                   <RequireRole roles={["admin"]}>
                     <NuevoProducto />
+                  </RequireRole>
+                }
+              />
+
+              <Route
+                path="/admin/perfil"
+                element={
+                  <RequireRole roles={["admin", "vendedor", "cliente"]}>
+                    <Perfil />
                   </RequireRole>
                 }
               />
@@ -185,6 +204,15 @@ export default function App() {
                   </RequireRole>
                 }
               />
+              <Route
+                path="/admin/mostrarusuarios"
+                element={
+                  <RequireRole roles={["admin", "vendedor"]}>
+                    <MostrarUsuarios />
+                  </RequireRole>
+                }
+              />
+
 
               <Route
                 path="/admin/productoscriticos"
@@ -212,6 +240,7 @@ export default function App() {
                   </RequireRole>
                 }
               />
+
             </Routes>
           </CartProvider>
         </ProductsProvider>

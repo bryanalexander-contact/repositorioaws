@@ -1,6 +1,6 @@
   import api from './AxiosConfig';
 
-  const BASE = 'http://52.90.132.27:4005/categorias';
+  const BASE = 'http://13.218.87.235:4005/categorias';
 
   class CategoriaService {
     // Obtener todas las categorías (id + nombre)
