@@ -14,13 +14,13 @@ export default function CompraFallida() {
   const [productos, setProductos] = useState([]);
 
   useEffect(() => {
-    const productosReducidos = carrito.map((p) => ({
+    const productosReducidos = (carrito || []).map((p) => ({
       id: p.id,
       nombre: p.nombre,
       cantidad: p.cantidad,
       precio: p.precio,
       precioOferta: p.precioOferta,
-      imagen: p.imagenURL || "",
+      imagen: p.imagenURL || p.imagen || p.imagen_url || "",
     }));
     setProductos(productosReducidos);
   }, [carrito]);
@@ -90,7 +90,7 @@ export default function CompraFallida() {
                     const precio = item.precioOferta && item.precioOferta < item.precio ? item.precioOferta : item.precio;
                     return (
                       <div key={item.id} className="cart-row">
-                        <div><img src={item.imagen} alt={item.nombre} style={{ width: 50, height: 50, objectFit: "cover", borderRadius: 8 }}/></div>
+                        <div><img src={item.imagen || "/img/placeholder.png"} alt={item.nombre} style={{ width: 50, height: 50, objectFit: "cover", borderRadius: 8 }}/></div>
                         <div>{item.nombre}</div>
                         <div>${precio.toLocaleString()}</div>
                         <div>{item.cantidad}</div>
@@ -105,7 +105,7 @@ export default function CompraFallida() {
             </div>
 
             <div className="text-center mt-4">
-              <h4 className="fw-bold">💰 Total a pagar: <span className="text-danger">${total?.toLocaleString() || 0}</span></h4>
+              <h4 className="fw-bold">💰 Total a pagar: <span className="text-danger">${(total || 0).toLocaleString()}</span></h4>
             </div>
           </div>
         </div>

@@ -27,7 +27,12 @@ const Productos = () => {
             {productos.length > 0 ? (
               productos.map((p) => (
                 <div key={p.id} className="col-producto">
-                  <ProductCard producto={p} />
+                  <ProductCard producto={{
+                    ...p,
+                    precio: p.precio ?? p.precio_oferta ?? 0,
+                    precioOferta: p.precio_oferta ?? null,
+                    imagen_url: p.imagen_url || p.imagen || "",
+                  }} />
                 </div>
               ))
             ) : (

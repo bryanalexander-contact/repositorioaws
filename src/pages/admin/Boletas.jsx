@@ -1,4 +1,3 @@
-// src/pages/admin/Boletas.jsx
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import BoletaService from "../../services/BoletaService";
@@ -33,7 +32,7 @@ function resolveUserRole(u) {
 function isAdminOrSeller(roleStr) {
   if (!roleStr) return false;
   const r = roleStr.toLowerCase();
-  return ["admin", "administrator", "superadmin", "vendedor", "seller"].includes(r);
+  return ["admin", "administrator", "superadmin", "administrador", "vendedor", "seller"].includes(r);
 }
 
 export default function Boletas() {
@@ -60,7 +59,7 @@ export default function Boletas() {
             comprador: safeParseJson(r.comprador) || {},
             productos: safeParseJson(r.productos) || [],
             total: r.total !== undefined && r.total !== null ? Number(r.total) : 0,
-            numero_compra: r.numero_compra ?? null,
+            numero_compra: r.numero_compra ?? r.numeroCompra ?? null,
           }));
           setBoletas(normalized);
           return;
@@ -79,7 +78,7 @@ export default function Boletas() {
           comprador: safeParseJson(r.comprador) || {},
           productos: safeParseJson(r.productos) || [],
           total: r.total !== undefined && r.total !== null ? Number(r.total) : 0,
-          numero_compra: r.numero_compra ?? null,
+          numero_compra: r.numero_compra ?? r.numeroCompra ?? null,
         }));
         setBoletas(normalized);
       } catch (err) {
@@ -169,7 +168,7 @@ export default function Boletas() {
         ) : boletas.length > 0 ? (
           <div className="boletas-lista">
             {boletas.map((b) => (
-              <div key={b.id} className="boleta-card" onClick={() => irADetalleBoleta(b)} style={{ cursor: "pointer" }}>
+              <div key={b.id ?? b.numero_compra} className="boleta-card" onClick={() => irADetalleBoleta(b)} style={{ cursor: "pointer" }}>
                 <h3>Boleta N° {b.numero_compra ?? b.id}</h3>
                 <p>
                   <strong>Fecha:</strong> {formatearFecha(b.fecha)}

@@ -8,7 +8,7 @@ import Footer from "../../components/organisms/Footer";
 import "../../assets/css/checkout.css";
 
 export default function DetalleBoleta() {
-  const { id } = useParams(); // ahora esto es el ID real de la boleta
+  const { id } = useParams(); // id puede ser id DB o numero_compra
   const navigate = useNavigate();
   const [boleta, setBoleta] = useState(null);
   const [user, setUser] = useState(() => UsuarioService.getCurrentUser());
@@ -42,12 +42,13 @@ export default function DetalleBoleta() {
         setLoading(false);
         return;
       }
+
       setLoading(true);
       setError(null);
-      try {
-        // AHORA BUSCA POR ID
-        const res = await BoletaService.getById(id);
 
+      try {
+        // Usa getById (intenta detalle, numero y fallback)
+        const res = await BoletaService.getById(id);
         const data = res?.data || null;
         if (!data) {
           setBoleta(null);
@@ -61,8 +62,10 @@ export default function DetalleBoleta() {
         setBoleta({ ...data, comprador, productos });
       } catch (err) {
         console.error("Error cargando boleta:", err);
+        // Intentar mostrar el mensaje del servidor si existe
+        const msg = err?.response?.data?.message || err?.message || "Error cargando boleta";
+        setError(msg);
         setBoleta(null);
-        setError("Error cargando boleta");
       } finally {
         setLoading(false);
       }
@@ -167,16 +170,16 @@ export default function DetalleBoleta() {
                   <div key={item.id} className="cart-item">
                     <div>
                       <img
-                        src={item.imagenURL || item.imagen || "/img/placeholder.png"}
+                        src={item.imagenURL || item.imagen || item.imagen_url || "/img/placeholder.png"}
                         alt={item.nombre}
                         className="producto-imagen"
                       />
                     </div>
                     <div className="nombre">{item.nombre}</div>
-                    <div className="precio">${precio.toLocaleString()}</div>
+                    <div className="precio">{formatearDinero(precio)}</div>
                     <div className="cantidad">{item.cantidad}</div>
                     <div className="subtotal">
-                      ${(precio * item.cantidad).toLocaleString()}
+                      {formatearDinero(precio * item.cantidad)}
                     </div>
                   </div>
                 );
@@ -191,7 +194,7 @@ export default function DetalleBoleta() {
               <span className="text-success">{formatearDinero(total)}</span>
             </h4>
 
-            <p className="text-muted mt-2">Fecha de compra: {new Date(fecha).toLocaleString()}</p>
+            <p className="text-muted mt-2">Fecha de compra: {fecha ? new Date(fecha).toLocaleString() : "-"}</p>
           </div>
 
           <div className="d-flex justify-content-center gap-3 mt-4">

@@ -4,44 +4,79 @@ import { useLocation } from "react-router-dom";
 import Header from "../../components/organisms/Header";
 import Footer from "../../components/organisms/Footer";
 import { useCart } from "../../context/CartContext";
-import { useUsers } from "../../context/UsersContext";
+import BoletaService from "../../services/BoletaService";
 import "../../assets/css/checkout.css";
 
 export default function CompraExitosa() {
-  const { clearCart, carrito } = useCart();
-  const { user, registrarCompra } = useUsers();
+  const { clearCart, carrito, total: totalContext, datosCheckout } = useCart();
   const location = useLocation();
-  const { total, comprador } = location.state || {};
+  const { total: totalFromState, comprador: compradorFromState } = location.state || {};
+
+  const total = totalFromState ?? totalContext;
+  const compradorInicial = compradorFromState ?? datosCheckout ?? {};
+
   const [numeroCompra, setNumeroCompra] = useState(0);
   const [productos, setProductos] = useState([]);
+  const [apiError, setApiError] = useState(null);
 
   useEffect(() => {
-    const productosReducidos = carrito.map((p) => ({
+    const productosReducidos = (carrito || []).map((p) => ({
       id: p.id,
       nombre: p.nombre,
       cantidad: p.cantidad,
       precio: p.precio,
       precioOferta: p.precioOferta,
-      imagen: p.imagenURL || "", // nunca File/Base64
+      imagen: p.imagenURL || p.imagen || p.imagen_url || "",
     }));
 
     setProductos(productosReducidos);
 
-    const nuevaCompra = {
-      fecha: new Date().toLocaleString(),
-      comprador: comprador || {},
-      productos: productosReducidos,
-      total,
-      userId: user?.id || null,
-    };
+    const payload = BoletaService.buildPayloadFromCart({
+      carrito: productosReducidos,
+      comprador: compradorInicial,
+      userId: (() => {
+        // intentar extraer user id de localStorage (compatibilidad)
+        try {
+          const cu = JSON.parse(localStorage.getItem("currentUser") || localStorage.getItem("userLogueado") || "{}");
+          return cu?.id ?? null;
+        } catch { return null; }
+      })(),
+    });
 
-    const num = registrarCompra(nuevaCompra);
-    setNumeroCompra(num);
+    (async () => {
+      try {
+        const res = await BoletaService.create(payload);
+        const creado = res?.data || res;
+        const num = creado?.numero_compra ?? creado?.numeroCompra ?? creado?.id ?? 0;
+        setNumeroCompra(num || 0);
+      } catch (err) {
+        console.warn("Error creando boleta en API:", err);
+        setApiError(err?.response?.data?.message || err?.message || "Error al crear boleta en servidor");
+        // fallback local: guardar en historialCompras (compatibilidad con tu app previa)
+        try {
+          const historial = JSON.parse(localStorage.getItem("historialCompras") || "[]");
+          const nuevoNumero = historial.length + 1;
+          const nuevaCompraLocal = {
+            numeroCompra: nuevoNumero,
+            fecha: new Date().toISOString(),
+            comprador: compradorInicial,
+            productos: productosReducidos,
+            total,
+            userId: payload.user_id ?? null,
+          };
+          localStorage.setItem("historialCompras", JSON.stringify([...historial, nuevaCompraLocal]));
+          setNumeroCompra(nuevoNumero);
+        } catch (e) {
+          console.error("Error fallback local:", e);
+        }
+      } finally {
+        clearCart();
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // ejecutar solo al montar
 
-    clearCart();
-  }, []);
-
-  if (!comprador) {
+  if (!compradorInicial || Object.keys(compradorInicial).length === 0) {
     return (
       <div className="container text-center py-5">
         <h2>No hay información de compra.</h2>
@@ -56,28 +91,27 @@ export default function CompraExitosa() {
         <div className="text-center mb-4">
           <h2 className="text-success fw-bold">✅ ¡Compra realizada con éxito!</h2>
           <p className="text-muted">
-            Gracias por tu compra, {comprador.nombre}. A continuación, los detalles de tu pedido:
+            Gracias por tu compra, {compradorInicial.nombre || "cliente"}. A continuación, los detalles de tu pedido:
           </p>
+          {apiError && <p className="text-warning">⚠️ {apiError} (se guardó localmente)</p>}
         </div>
 
         <div className="border rounded shadow-sm p-4 mb-4 bg-light">
           <h5 className="fw-bold mb-3">
             🧾 N° de Compra:{" "}
-            <span className="text-primary">
-              #{String(numeroCompra).padStart(4, "0")}
-            </span>
+            <span className="text-primary">#{String(numeroCompra).padStart(4, "0")}</span>
           </h5>
 
           <div className="mb-4">
             <h6 className="fw-bold border-bottom pb-2">Datos del Comprador</h6>
             <div className="row">
-              <div className="col-md-6"><strong>Nombre:</strong> {comprador.nombre} {comprador.apellidos}</div>
-              <div className="col-md-6"><strong>Correo:</strong> {comprador.correo}</div>
-              <div className="col-md-6"><strong>Dirección:</strong> {comprador.direccion}</div>
-              {comprador.departamento && <div className="col-md-6"><strong>Departamento:</strong> {comprador.departamento}</div>}
-              <div className="col-md-6"><strong>Región:</strong> {comprador.region}</div>
-              <div className="col-md-6"><strong>Comuna:</strong> {comprador.comuna}</div>
-              {comprador.indicacion && <div className="col-12"><strong>Indicaciones:</strong> {comprador.indicacion}</div>}
+              <div className="col-md-6"><strong>Nombre:</strong> {compradorInicial.nombre} {compradorInicial.apellidos}</div>
+              <div className="col-md-6"><strong>Correo:</strong> {compradorInicial.correo}</div>
+              <div className="col-md-6"><strong>Dirección:</strong> {compradorInicial.direccion}</div>
+              {compradorInicial.departamento && <div className="col-md-6"><strong>Departamento:</strong> {compradorInicial.departamento}</div>}
+              <div className="col-md-6"><strong>Región:</strong> {compradorInicial.region}</div>
+              <div className="col-md-6"><strong>Comuna:</strong> {compradorInicial.comuna}</div>
+              {compradorInicial.indicacion && <div className="col-12"><strong>Indicaciones:</strong> {compradorInicial.indicacion}</div>}
             </div>
           </div>
 
@@ -98,7 +132,7 @@ export default function CompraExitosa() {
                   return (
                     <div key={item.id} className="cart-item">
                       <div>
-                        <img src={item.imagen} alt={item.nombre} className="producto-imagen"/>
+                        <img src={item.imagen || "/img/placeholder.png"} alt={item.nombre} className="producto-imagen"/>
                       </div>
                       <div className="nombre">{item.nombre}</div>
                       <div className="precio">${precio.toLocaleString()}</div>
@@ -113,7 +147,7 @@ export default function CompraExitosa() {
             </div>
 
             <div className="text-center mt-4">
-              <h4 className="fw-bold">💰 Total Pagado: <span className="text-success">${total?.toLocaleString()}</span></h4>
+              <h4 className="fw-bold">💰 Total Pagado: <span className="text-success">${(total || 0).toLocaleString()}</span></h4>
             </div>
           </div>
 

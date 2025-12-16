@@ -1,18 +1,24 @@
 // src/pages/public/Checkout.jsx
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import useUserAuth from "../../hooks/useUserAuth";
 import Header from "../../components/organisms/Header";
 import Footer from "../../components/organisms/Footer";
 import "../../assets/css/checkout.css";
+import { useCart } from "../../context/CartContext";
 
 export default function Checkout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useUserAuth();
 
-  const carrito = location.state?.carrito || [];
-  const total = location.state?.total || 0;
+  const {
+    carrito: carritoContext,
+    total: totalContext,
+    datosCheckout,
+  } = useCart();
+
+  // Preferimos lo que venga desde /carrito (state) porque así el usuario no pierde nada
+  const carrito = location.state?.carrito || carritoContext || [];
+  const total = location.state?.total || totalContext || 0;
 
   const [form, setForm] = useState({
     nombre: "",
@@ -25,30 +31,25 @@ export default function Checkout() {
     indicacion: "",
   });
 
+  // Autollenado desde CartContext (datosCheckout)
   useEffect(() => {
-    if (user) {
-      setForm((prev) => ({
-        ...prev,
-        nombre: user.nombre || "",
-        apellidos: user.apellidos || "",
-        correo: user.correo || "",
-        direccion: user.direccion || "",
-        region: user.region || "",
-        comuna: user.comuna || "",
-      }));
+    if (datosCheckout) {
+      setForm((prev) => ({ ...prev, ...datosCheckout }));
     }
-  }, [user]);
+  }, [datosCheckout]);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handlePagar = (e) => {
     e.preventDefault();
-    const { nombre, apellidos, correo, direccion, region, comuna } = form;
-    if (!nombre || !apellidos || !correo || !direccion || !region || !comuna) {
+    const required = ["nombre", "apellidos", "correo", "direccion", "region", "comuna"];
+    const missing = required.some((k) => !form[k] || !form[k].toString().trim());
+    if (missing) {
       navigate("/comprafallida");
       return;
     }
-    // Si quieres persistir la compra en API, aquí llamarías UsuarioService.addCompra(...)
+
+    // Navegar a compraexitosa. La creación de boleta se hace allí (API).
     navigate("/compraexitosa", { state: { total, comprador: form } });
   };
 
@@ -65,22 +66,34 @@ export default function Checkout() {
         </div>
 
         <div className="checkout-products mb-4">
-          {carrito.map((item) => {
-            const precio = item.precioOferta && item.precioOferta < item.precio ? item.precioOferta : item.precio;
-            const subtotal = precio * (item.cantidad || 1);
-            return (
-              <div key={item.id} className="d-flex align-items-center border-bottom p-2">
-                <img src={item.imagen} alt={item.nombre} style={{ width: 50, height: 50, objectFit: "cover", borderRadius: 8 }} />
-                <div className="ms-3 flex-grow-1"><p className="m-0 fw-bold">{item.nombre}</p></div>
-                <div>${subtotal.toLocaleString()}</div>
-              </div>
-            );
-          })}
+          {carrito && carrito.length > 0 ? (
+            carrito.map((item) => {
+              const precio = item.precioOferta && item.precioOferta < item.precio ? item.precioOferta : item.precio;
+              const subtotal = precio * (item.cantidad || 1);
+              return (
+                <div key={item.id} className="d-flex align-items-center border-bottom p-2">
+                  <img
+                    src={item.imagen || item.imagenURL || item.imagen_url || "/img/placeholder.png"}
+                    alt={item.nombre}
+                    style={{ width: 50, height: 50, objectFit: "cover", borderRadius: 8 }}
+                  />
+                  <div className="ms-3 flex-grow-1"><p className="m-0 fw-bold">{item.nombre}</p></div>
+                  <div>${subtotal.toLocaleString()}</div>
+                </div>
+              );
+            })
+          ) : (
+            <p className="p-3">No hay productos en el carrito.</p>
+          )}
         </div>
 
         <div className="checkout-form p-4 border rounded shadow-sm">
           <h4 className="mb-3">Información del Cliente</h4>
-          {user ? <p className="text-success">Datos cargados automáticamente desde tu cuenta.</p> : <p>Completa la siguiente información:</p>}
+          {datosCheckout && datosCheckout.nombre ? (
+            <p className="text-success">Datos cargados automáticamente desde tu cuenta.</p>
+          ) : (
+            <p>Completa la siguiente información:</p>
+          )}
 
           <form onSubmit={handlePagar}>
             <div className="row mb-3">

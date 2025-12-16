@@ -1,4 +1,3 @@
-// src/pages/public/DetalleProducto.jsx
 import React, { useState, useEffect } from "react";
 import { useCart } from "../../context/CartContext";
 import { useParams, useNavigate } from "react-router-dom";
@@ -34,11 +33,12 @@ export default function DetalleProducto() {
           ...prod,
           precio: Number(prod.precio) || 0,
           precioOferta: prod.precio_oferta ? Number(prod.precio_oferta) : null,
+          imagen_url: prod.imagen_url || prod.imagen || "",
         });
 
         // Cargar productos relacionados
         const catRes = await ProductService.getByCategory(prod.categoria);
-        const relacionadosFiltrados = catRes.data
+        const relacionadosFiltrados = (catRes.data || [])
           .filter((p) => p.id !== prod.id)
           .slice(0, 8)
           .map((p) => ({
@@ -104,7 +104,17 @@ export default function DetalleProducto() {
 
             <button
               className="btn-agregar"
-              onClick={() => addToCart(producto, cantidad)}
+              onClick={() =>
+                addToCart(
+                  {
+                    ...producto,
+                    precio: producto.precio,
+                    precioOferta: producto.precioOferta,
+                    imagenURL: producto.imagen_url,
+                  },
+                  cantidad
+                )
+              }
               disabled={producto.stock === 0}
             >
               🛒 Añadir al carrito

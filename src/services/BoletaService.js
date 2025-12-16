@@ -1,8 +1,10 @@
 // src/services/BoletaService.js
 import api from "./AxiosConfig";
 
-const BASE_BOLETAS = "http://54.91.93.162:4006/boletas";
-const BASE_DETALLE = "http://54.91.93.162:4004/detalle";
+// Preferir variables de entorno si las tienes, si no usar IP/puertos que compartiste
+const BASE_HOST = process.env.REACT_APP_API_HOST || "http://52.90.132.27";
+const BASE_BOLETAS = process.env.REACT_APP_API_BOLETAS || `${BASE_HOST}:4006/boletas`;
+const BASE_DETALLE = process.env.REACT_APP_API_DETALLE || `${BASE_HOST}:4004/detalle`;
 
 function safeParseJsonIfString(v) {
   if (v === null || v === undefined) return v;
@@ -20,7 +22,7 @@ function normalizeRow(row = {}) {
   const comprador = safeParseJsonIfString(row.comprador) || {};
   const productos = safeParseJsonIfString(row.productos) || [];
   const total = row.total !== undefined && row.total !== null ? Number(row.total) : 0;
-  const numero_compra = row.numero_compra ?? null;
+  const numero_compra = row.numero_compra ?? row.numeroCompra ?? null;
   return {
     ...row,
     comprador,
@@ -36,20 +38,15 @@ function normalizeRows(rows) {
 }
 
 class BoletaService {
-  // Obtener todas las boletas (admin/testing)
-  // Devuelve una estructura similar a axios: { data: [ ... ] }
+  // Obtener todas las boletas
   getAll() {
     return api
       .get(BASE_BOLETAS)
       .then((res) => ({ data: normalizeRows(res.data) }))
-      .catch((err) => {
-        // propaga error con más contexto
-        return Promise.reject(err);
-      });
+      .catch((err) => Promise.reject(err));
   }
 
-  // Obtener boletas por usuario (userId puede ser string o number)
-  // Si userId no viene, devolvemos { data: [] } para que el frontend lo maneje.
+  // Obtener boletas por usuario (userId)
   getByUser(userId) {
     if (userId === undefined || userId === null || userId === "") {
       return Promise.resolve({ data: [] });
@@ -62,7 +59,7 @@ class BoletaService {
       .catch((err) => Promise.reject(err));
   }
 
-  // Obtener boleta por número de compra
+  // Obtener boleta por número de compra (ruta /boletas/numero/:numero)
   getByNumero(numero) {
     if (numero === undefined || numero === null || numero === "") {
       return Promise.reject(new Error("Número de compra requerido"));
@@ -71,6 +68,59 @@ class BoletaService {
       .get(`${BASE_BOLETAS}/numero/${encodeURIComponent(String(numero))}`)
       .then((res) => ({ data: normalizeRow(res.data) }))
       .catch((err) => Promise.reject(err));
+  }
+
+  // Obtener detalle por número de compra (usa API detalle /detalle/:numeroCompra)
+  getDetalle(numeroCompra) {
+    if (numeroCompra === undefined || numeroCompra === null || numeroCompra === "") {
+      return Promise.reject(new Error("Número de compra requerido"));
+    }
+    return api
+      .get(`${BASE_DETALLE}/${encodeURIComponent(String(numeroCompra))}`)
+      .then((res) => ({ data: normalizeRow(res.data) }))
+      .catch((err) => Promise.reject(err));
+  }
+
+  // ---- NEW: Obtener boleta por id o numero con múltiples estrategias ----
+  // 1) intentar getByNumero (API boletas /numero)
+  // 2) intentar getDetalle (API detalle /detalle)
+  // 3) fallback: getAll() y buscar por id o numero_compra
+  async getById(idOrNumero) {
+    if (idOrNumero === undefined || idOrNumero === null || idOrNumero === "") {
+      return Promise.reject(new Error("Identificador requerido"));
+    }
+
+    // 1) Intentar número en /boletas/numero
+    try {
+      const resp = await this.getByNumero(idOrNumero);
+      if (resp && resp.data) return { data: resp.data };
+    } catch (e) {
+      // continúa al siguiente intento
+    }
+
+    // 2) Intentar endpoint detalle (otra API)
+    try {
+      const resp = await this.getDetalle(idOrNumero);
+      if (resp && resp.data) return { data: resp.data };
+    } catch (e) {
+      // continúa al siguiente intento
+    }
+
+    // 3) Fallback: obtener todas y buscar por id o numero_compra
+    try {
+      const all = await this.getAll();
+      const rows = Array.isArray(all.data) ? all.data : [];
+      const found = rows.find(
+        (r) =>
+          String(r.id) === String(idOrNumero) ||
+          String(r.numero_compra) === String(idOrNumero) ||
+          String(r.numeroCompra) === String(idOrNumero)
+      );
+      if (found) return { data: found };
+      return Promise.reject(new Error("Boleta no encontrada"));
+    } catch (err) {
+      return Promise.reject(err);
+    }
   }
 
   // Crear boleta
@@ -114,7 +164,6 @@ class BoletaService {
 
     payload.total = payload.total !== undefined ? Number(payload.total) || 0 : 0;
 
-    // Post a la API (dejamos que el servidor maneje jsonb)
     return api
       .post(BASE_BOLETAS, payload)
       .then((res) => ({ data: normalizeRow(res.data) }))
@@ -128,17 +177,6 @@ class BoletaService {
     return api.delete(`${BASE_BOLETAS}/${safeId}`);
   }
 
-  // Obtener detalle por número de compra (usa la API detalle)
-  getDetalle(numeroCompra) {
-    if (numeroCompra === undefined || numeroCompra === null || numeroCompra === "") {
-      return Promise.reject(new Error("Número de compra requerido"));
-    }
-    return api
-      .get(`${BASE_DETALLE}/${encodeURIComponent(String(numeroCompra))}`)
-      .then((res) => ({ data: normalizeRow(res.data) }))
-      .catch((err) => Promise.reject(err));
-  }
-
   // Helper: construir payload desde carrito
   buildPayloadFromCart({ carrito = [], comprador = {}, userId = null, numero_compra = undefined }) {
     const productos = carrito.map((p) => ({
@@ -148,7 +186,7 @@ class BoletaService {
       precio: p.precio !== undefined ? Number(p.precio) || 0 : 0,
       precioOferta:
         p.precioOferta !== undefined ? (p.precioOferta === null ? null : Number(p.precioOferta) || null) : null,
-      imagen: p.imagen || p.imagenURL || "",
+      imagen: p.imagen || p.imagenURL || p.imagen_url || "",
     }));
 
     const total = productos.reduce((acc, it) => {
