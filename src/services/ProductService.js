@@ -1,7 +1,7 @@
 // src/services/ProductService.js
 import api from "./AxiosConfig";
 
-const API_URL = process.env.REACT_APP_API_PRODUCTOS || "http://13.218.87.235:4003";
+const API_URL = process.env.REACT_APP_API_PRODUCTOS || "http://54.174.154.95:4003";
 
 class ProductService {
   // GET /productos
